@@ -8,12 +8,12 @@ Template created with use of a Responsive Framework http://stas-melnikov.ru/resp
 */
 
 var ResponsiveUX = {
-	
+
 	initMap: function(){
-			
+
 		var mapCanvas = document.getElementById("map"),
 		mapOptions ={
-			center: new google.maps.LatLng(53.186162, 45.00961),
+			center: new google.maps.LatLng(40.762665, -111.836791),
 			zoom: 17,
 			mapTypeId: google.maps.MapTypeId.roadmap,
 			scrollwheel: false,
@@ -22,51 +22,51 @@ var ResponsiveUX = {
 
 		map = new google.maps.Map(mapCanvas, mapOptions),
 		marker = new google.maps.Marker({
-			position: new google.maps.LatLng(53.186162, 45.00961),
+			position: new google.maps.LatLng(40.762665, -111.836791),
 			map: map,
 			icon: 'icons/marker.svg',
 		});
 	},
-	
+
 	init: function(){
-		
+
 		var script = document.createElement("script"),
 		body = $("body");
-		
+
 		script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDEN_8Sph4q9GwhWKKnsOP5bl4Frwyo3aM&amp;sensor=false&callback=ResponsiveUX.initMap";
 		script.async = true;
 		body.append(script);
-		body.removeClass("preloader_active"); 
-		
+		body.removeClass("preloader_active");
+
 		$(".skills").addClass("skills_active");
-		
+
 		$(".menu__icon").on('click', function(){
-			
+
 			body.addClass("fullscreen-menu");
-			
+
 		});
-		
+
 		$(".menu-close").on( 'click', function(){
-			
+
 			body.removeClass("fullscreen-menu");
-			
+
 		});
-		
+
 		$(".scroll_js").on('click', function(event){
-			
+
 			event.preventDefault();
-			
+
 			var	target = $(this).attr('href'),
-			position = ($(target).offset().top) - $(".header_js").outerHeight(); 
-			
+			position = ($(target).offset().top) - $(".header_js").outerHeight();
+
 			if($(this).hasClass("mobile-menu__link")){
-				
+
 				body.removeClass("fullscreen-menu");
 
 			}
-			
+
 			$("html, body").animate({scrollTop: position}, 800);
-			
-		});		
+
+		});
 	}
 };
