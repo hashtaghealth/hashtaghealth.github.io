@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hashtaghealth.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+  </head>
+  
+  <body>
+  	<div id="map"></div>
+<!--    // <div id="map" style="width: 600px; height: 400px"></div> -->
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<script>
+// 		set Salt Lake City at the center 40.78054, -111.9342
+		var cities = new L.LayerGroup();
+		L.marker([40.78054, -111.931]).bindPopup('This is Littleton, CO.').addTo(cities),
+		L.marker([40.78054, -111.932]).bindPopup('This is Denver, CO.').addTo(cities),
+		L.marker([40.78054, -111.933]).bindPopup('This is Aurora, CO.').addTo(cities),
+		L.marker([40.78054, -111.934]).bindPopup('This is Golden, CO.').addTo(cities);
+		
+		var map = L.map('map').setView([40.78054, -111.9342], 8);
+// 		var map = L.map('map', { //.setView([40.78054, -111.9342], 8);
+// 			center: [40.78054, -111.9342],
+// 			zoom: 8,
+// 			layers: [grayscale, cities]
+// 		});
+		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		var osmAttrib='Map data ? <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+		var osm = new L.TileLayer(osmUrl, {minZoom: 2, maxZoom: 12, attribution: osmAttrib});
+		map.addLayer(osm);
+
+
+/* 		L.marker([51.5, -0.09]).addTo(map)
+			.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
+
+		L.circle([51.508, -0.11], 500, {
+			color: 'red',
+			fillColor: '#f03',
+			fillOpacity: 0.5
+		}).addTo(map).bindPopup("I am a circle.");
+
+		L.polygon([
+			[51.509, -0.08],
+			[51.503, -0.06],
+			[51.51, -0.047]
+		]).addTo(map).bindPopup("I am a polygon."); */
+
+		
+		var popup = L.popup();
+
+		function onMapClick(e) {
+			popup
+				.setLatLng(e.latlng)
+				.setContent("You clicked the map at " + e.latlng.toString())
+				.openOn(map);
+		}
+
+		map.on('click', onMapClick);
+// 		http://localhost:8081/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite:parkslocal&styles=&bbox=-113.24020018621867,37.58503743142043,-109.75044605371143,41.98452371877478&width=406&height=512&srs=EPSG:4326&format=application/openlayers
+		//var restaurants = L.tileLayer.wms("http://dapeng.chpc.utah.edu:8081/geoserver/cite/wms", {
+		var restaurants = L.tileLayer.wms("http://dapeng.chpc.utah.edu:8081/geoserver/cite/wms", {
+	    layers: 'cite:restaurant',
+	    format: 'image/png',
+	    transparent: true,
+	    attribution: "Weather data © 2012 IEM Nexrad"
+	    });
+	    //var parks = L.tileLayer.wms("http://dapeng.chpc.utah.edu:8081/geoserver/cite/wms", {
+		var parks = L.tileLayer.wms("http://dapeng.chpc.utah.edu:8081/geoserver/cite/wms", {
+	    layers: 'cite:parkslocal',
+	    format: 'image/png',
+	    transparent: true,
+	    attribution: "Weather data © 2012 IEM Nexrad"
+	    });
+	    //var osmparks = L.tileLayer.wms("http://dapeng.chpc.utah.edu:8081/geoserver/cite/wms", {
+		var osmparks = L.tileLayer.wms("http://dapeng.chpc.utah.edu:8081/geoserver/cite/wms", {
+	    layers: 'cite:osmparks',
+	    format: 'image/png',
+	    transparent: true,
+	    attribution: "Weather data © 2012 IEM Nexrad"
+	    });
+
+		var osmusrest = L.tileLayer.wms("http://dapeng.chpc.utah.edu:8081/geoserver/cite/wms", {
+	    layers: 'cite:usosmrest',
+	    format: 'image/png',
+	    transparent: true,
+	    attribution: "Weather data ? 2012 IEM Nexrad"
+	    });
+		var overlays = {
+			"Restaurants": restaurants,
+			"Parks": parks,
+			"OSM parks": osmparks,
+			"OSM Restaurants":osmusrest
+		};
+		L.control.layers(overlays).addTo(map);
+// 		L.control.fullscreen().addTo(map);
+	</script>
+
+    
+  </body>
+</html>
