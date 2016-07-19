@@ -56,7 +56,8 @@ html {
 }
 body {
   font-family: 'Roboto', sans-serif;
-  font-size: 1.6rem;
+  /*font-size: 1.6rem;*/
+  font-size:1.8rem;
   font-weight: 400;
 }
 a {
@@ -129,8 +130,10 @@ p:last-of-type {
   line-height: 3.5rem;
 }
 .title_small {
-  font-size: 2.5rem;
-  font-weight: 400;
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 400;
 }
 /*
  *header
