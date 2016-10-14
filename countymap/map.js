@@ -131,7 +131,7 @@ var CartoDBLayer = function (n, u, c)
 };
 
 
-//layers.push(	new LayerContainer('Subdivisions', 'http://www.cartedesign.com/farmington/subdivisions2.kmz', 'City Layers'));
+
 
 layers.push(	new CartoDBLayer('Average Calories', 'https://hashtaghealth.carto.com/api/v2/viz/1038ed85-581a-4132-ae97-1d634b2c8993/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('Age Adjusted Mortality', 'https://hashtaghealth.carto.com/api/v2/viz/4fec2e9a-923f-11e6-9aca-0e3ebc282e83/viz.json', 'Map Layers'));
