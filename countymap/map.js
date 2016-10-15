@@ -1,14 +1,12 @@
 var adUnit, infowindow, directionsDisplay, geocoder, map;
 var directionsService = new google.maps.DirectionsService();
-var latlng = new google.maps.LatLng(40.456389, -100.773611);
+var latlng = new google.maps.LatLng(40.456389, -105.773611);
 
 var myOptions = {
-    zoom: 5,
+    zoom: 4,
     center: latlng,
     scaleControl: true,
     overviewMapControl: true,
-    maxZoom: 24,
-    minZoom:0,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
 	mapTypeControl: true,
 		  mapTypeControlOptions : {
