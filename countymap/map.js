@@ -1,6 +1,6 @@
 var adUnit, infowindow, directionsDisplay, geocoder, map;
 var directionsService = new google.maps.DirectionsService();
-var latlng = new google.maps.LatLng(40.456389, -105.773611);
+var latlng = new google.maps.LatLng(40.456389, -90.773611);
 
 var myOptions = {
     zoom: 4,
