@@ -131,18 +131,18 @@ var CartoDBLayer = function (n, u, c)
 
 
 
-layers.push(	new CartoDBLayer('Average Calories', 'https://hashtaghealth.carto.com/api/v2/viz/1038ed85-581a-4132-ae97-1d634b2c8993/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('Average Density of Food', 'https://hashtaghealth.carto.com/api/v2/viz/1038ed85-581a-4132-ae97-1d634b2c8993/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('Age Adjusted Mortality', 'https://hashtaghealth.carto.com/api/v2/viz/4fec2e9a-923f-11e6-9aca-0e3ebc282e83/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('Premature Mortality Rate', 'https://hashtaghealth.carto.com/api/v2/viz/316ace20-a1c1-498d-ad60-ca2e20466449/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('Happy', 'https://hashtaghealth.carto.com/api/v2/viz/6e48b8dc-924d-11e6-a66d-0e05a8b3e3d7/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('% Tweets that are Happy', 'https://hashtaghealth.carto.com/api/v2/viz/6e48b8dc-924d-11e6-a66d-0e05a8b3e3d7/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('Diabetes', 'https://hashtaghealth.carto.com/api/v2/viz/e3bb2ea8-055d-4214-8479-187ffca6622a/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('Exercise', 'https://hashtaghealth.carto.com/api/v2/viz/69654092-c3bc-4415-bfbe-3496d762925a/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('Fast Food', 'https://hashtaghealth.carto.com/api/v2/viz/9838aa41-3958-4163-b031-0b713053d508/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('% Tweets about Exercise', 'https://hashtaghealth.carto.com/api/v2/viz/69654092-c3bc-4415-bfbe-3496d762925a/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('% Tweets about Fast Food', 'https://hashtaghealth.carto.com/api/v2/viz/9838aa41-3958-4163-b031-0b713053d508/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('Fair/Poor Health', 'https://hashtaghealth.carto.com/api/v2/viz/54fbfc8d-3125-481b-8d24-e5359c972d86/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('Food', 'https://hashtaghealth.carto.com/api/v2/viz/8eb1d1f8-cc61-45fb-b6af-eed834c43678/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('Healthy Food', 'https://hashtaghealth.carto.com/api/v2/viz/66c6bcac-4a9e-4380-af84-807bb92a69fe/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('% Tweets about Food', 'https://hashtaghealth.carto.com/api/v2/viz/8eb1d1f8-cc61-45fb-b6af-eed834c43678/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('% Tweets about Healthy Food', 'https://hashtaghealth.carto.com/api/v2/viz/66c6bcac-4a9e-4380-af84-807bb92a69fe/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('Obesity', 'https://hashtaghealth.carto.com/api/v2/viz/73fd643d-f500-48c5-9e3a-99387051b871/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('Physically Inactive', 'https://hashtaghealth.carto.com/api/v2/viz/5b503f86-c3b5-4d28-ae69-fe082e795200/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('Physical Inactivity', 'https://hashtaghealth.carto.com/api/v2/viz/5b503f86-c3b5-4d28-ae69-fe082e795200/viz.json', 'Map Layers'));
 
 
 
