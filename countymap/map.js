@@ -131,7 +131,7 @@ var CartoDBLayer = function (n, u, c)
 
 
 
-layers.push(	new CartoDBLayer('Average Density of Food', 'https://hashtaghealth.carto.com/api/v2/viz/1038ed85-581a-4132-ae97-1d634b2c8993/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('Avg. Caloric Density of Food', 'https://hashtaghealth.carto.com/api/v2/viz/1038ed85-581a-4132-ae97-1d634b2c8993/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('% Tweets that are Happy', 'https://hashtaghealth.carto.com/api/v2/viz/6e48b8dc-924d-11e6-a66d-0e05a8b3e3d7/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('% Tweets about Exercise', 'https://hashtaghealth.carto.com/api/v2/viz/69654092-c3bc-4415-bfbe-3496d762925a/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('% Tweets about Fast Food', 'https://hashtaghealth.carto.com/api/v2/viz/9838aa41-3958-4163-b031-0b713053d508/viz.json', 'Map Layers'));
