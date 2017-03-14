@@ -131,7 +131,7 @@ var CartoDBLayer = function (n, u, c)
 };
 
 
-//layers.push(	new LayerContainer('Subdivisions', 'http://www.cartedesign.com/farmington/subdivisions2.kmz', 'City Layers'));
+//layers.push(	new LayerContainer('Subdivisions', 'https://www.cartedesign.com/farmington/subdivisions2.kmz', 'City Layers'));
 
 layers.push(	new CartoDBLayer('State', 'https://hashtaghealth.carto.com/api/v2/viz/a88b82ca-0900-11e7-b06b-0e3ff518bd15/viz.json', 'Map Layers'));
 layers.push(	new CartoDBLayer('County', '', 'Map Layers'));
