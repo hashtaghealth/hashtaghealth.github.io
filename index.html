@@ -1,220 +1,255 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html>
 <head>
-<title>HashtagHealth</title>
-<meta charset="utf-8" />
-<meta name="description" content="HashtagHealth" />
-<meta name="keywords" content="responsive framework, UI templates, mobile template html5, responsive template, responsive theme, 3d panorama" />
-<meta name="author" content="Stas Melnikov" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
-<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
-<!--THIS IS THE GOOGLE ANALYTICS TRACKING CODE-->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    <title>HashtagHealth-Geoportal</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
 
-  ga('create', 'UA-85783082-1', 'auto');
-  ga('send', 'pageview');
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-</script>
+        #map-canvas {
+            height: 100%;
+        }
+    </style>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <!--THIS IS THE GOOGLE ANALYTICS TRACKING CODE-->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-85783082-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
 </head>
-<body class="preloader_active">
-	<header class="header header_js" id="home">
-		<div class="container">
-			<h1 class="logo">HashtagHealth<span class="logo__item">Department of Health Promotion and Education, University of Utah</span></h1>
-			<nav id="menu" class="menu">
-				<span class="menu__icon"></span>
-				<ul class="menu-list">
-					<li class="menu-list__item"><a href="#about" class="menu__link scroll_js">About</a></li>
-					<li class="menu-list__item"><a href="#publications" class="menu__link scroll_js">Publications</a></li>
-					<li class="menu-list__item"><a href="#portfolio" class="menu__link scroll_js">Portfolio</a></li>
-					<!-- <li class="menu-list__item"><a href="#blog" class="menu__link scroll_js">Blog</a></li> -->
-					<li class="menu-list__item"><a href="#people" class="menu__link scroll_js">People</a></li>
-					<li class="menu-list__item"><a href="#contacts" class="menu__link scroll_js">Contacts</a></li>
-					<li class="menu-list__item"><a href="https://github.com/hashtaghealth" class="menu__link">GitHub</a></li>
-				</ul>
-			</nav>
-		</div>
-	</header>
-	<div class="fullwidth-banner wrapper wrapper_decor">
-		<div class="container content">
-			<!-- <img class="fullwidth-banner__img" src="images/html5.png" alt="html5 icon" /> -->
-			<div class="fullwidth-banner__inner">
-				HashtagHealth: A Social Media Big Data Resource for Neighborhood Effects Research (NIH)<br>
-			</div>
-		</div>
-	</div>
-	<section id="about" class="about wrapper">
-		<div class="container content">
-			<h2 class="title content__title">About HashtagHealth</h2>
-			<div class="about__layout">
-					<p>
-						HashtagHealth is a project funded by the National Institute of Health's (NIH) <a href="https://datascience.nih.gov/bd2k" target="_blank">Big Data to Knowledge Initiative</a> as a Mentored Research Career Development Award
-						for Dr. <a href="https://faculty.utah.edu/u0916912-QUYNH_CAMTHI_NGUYEN/biography/index.hml">Quynh Nguyen</a>
-						in the Department of Health, Recreation and Kinesiology at the University of Utah.
-						This project proposes to design and develop a new resource, HashtagHealth,
-						that addresses both the dearth of neighborhood data and offers novel characterizations of neighborhoods.
-						We will build the data algorithms and infrastructure to harness relatively untapped, cost efficient,
-						and pervasive social media data to develop neighborhood indicators such as food themes, healthiness of food mentions,
-						frequency of exercise/recreation mentions, metabolic intensity of physical activities, and happiness levels.<br>
 
-						The specific research aims are as follows:<br>
-						<b>Aim 1. </b>Develop a neighborhood data resource, HashtagHealth, for public health researchers.<br>
-						<b>Aim 2. </b>Develop Big Data techniques to produce novel neighborhood indicators.<br>
-						<b>Aim 3. </b>Utilize HashtagHealth and individual-level data from the Utah Population Database
-						to investigate neighborhood influences on obesity among young adults.
-					</p>
-			</div>
-		</div>
-	</section>
-
-	<section id="publications" class="wrapper">
-		<div class="container content">
-			<h2 class="title content__title">Publications</h2>
-			<div>
-				<p>
-					Nguyen, Q., Li, D., Meng, H., Kath, S., Nsoesie, E., Wen, M., & Li, F. (2016).
-					"Building a national neighborhood dataset from geotagged Twitter data for indicators of happiness, diet, and physical activity".
-					<i>JMIR Public Health & Surveillance</i>, <i>Vol 2</i>, <i> No 2</i>, doi: <a href="https://publichealth.jmir.org/2016/2/e158/" target="_blank">https://publichealth.jmir.org/2016/2/e158/</a>
-				</p>
-				<p>Nguyen, Q. C., Kath, S., Meng, H.-W., Li, D., Smith, K. R., VanDerslice, J. A., Wen, M., & Li, F. (2016).
-					Leveraging geotagged Twitter data to examine neighborhood happiness, diet, and physical activity.
-					<i>Applied Geography</i>, <i>73</i>, 77-88. doi: <a href="http://dx.doi.org/10.1016/j.apgeog.2016.06.003" target="_blank" >http://dx.doi.org/10.1016/j.apgeog.2016.06.003</a>
-				</p>
-			</div>
-		</div>
-	</section>
-
-	<section id="portfolio" class="wrapper">
-		<div class="container content">
-			<h2 class="title content__title">Portfolio</h2>
-			<b>HashtagHealth Poster</b>
-			<p><a href="images/HashtagHealth_poster_BD2K.pdf">Download (PDF)</a></p>
-				<b>State Level Analysis Maps</b><br>
-					<p><a href="images/maps/state_happiness.jpg" target="_blank" ><img src="images/maps/state_happiness.jpg" width="90px" height="60px"/></a>
-					   <a href="images/maps/state_fastfood.jpg" target="_blank"  ><img src="images/maps/state_fastfood.jpg" width="90px" height="60px"/></a>
-					   <a href="images/maps/state_exercise.jpg" target="_blank"  ><img src="images/maps/state_exercise.jpg" width="90px" height="60px"/></a>
-					   <a href="images/maps/state_healthy.jpg" target="_blank"  ><img src="images/maps/state_healthy.jpg" width="90px" height="60px"/></a>
-					   <a href="images/maps/national_yelp_restaurant_20160526.jpg" target="_blank"  ><img src="images/maps/national_yelp_restaurant_20160526.jpg" width="90px" height="60px"/></a>
-					   <a href="images/maps/Ethnic.jpg" target="_blank"  ><img src="images/maps/Ethnic.jpg" width="90px" height="60px"/></a>
-				           <a href="images/maps/Cafe.jpg" target="_blank"  ><img src="images/maps/Cafe.jpg" width="90px" height="60px"/></a>
-				           <a href="images/maps/Bars and Pubs.jpg" target="_blank"  ><img src="images/maps/Bars and Pubs.jpg" width="90px" height="60px"/></a>
+<body>
+    <div id="map"></div>
+    <div id="layers">
+        <div id="accordion">
+            <h3><strong>Map Layers</strong></h3>
+            <div>
+                <table></table>
+                <br />
+                <table>                    
+                    <input id="address" type="textbox" placeholder="County, State">
+                    <input type="button" value="Search" onclick="codeAddress()">
+                    <input type="button" value="Remove All Shapes" onclick="removeAll()">                    
+                </table>
+            </div>
+        </div>
+    </div>
 
 
-					</p>
-				<b>County Level Analysis Map</b><br>
-			 		<p>This online mapping application may be used to look up Twitter characteristics as predictors of health outcomes at the county level.
-				           In the map, the variables are standardized with a mean of 0 and a standard deviation of 1. Negative values indicate below average values for a certain metric (e.g., happiness). Positive values indicate higher than average values.
-		        		   *Twitter data collection period: April 2015– March 2016. County summaries were derived from 80 million tweets from the contiguous United States. Map was built with <a href="http://www.carto.com" target="_blank">Carto</a> and Google Maps.
-					</p>
-					<center><iframe src="https://hashtaghealth.github.io/countymap/map.html" height="600" width="95%"></iframe>
-					</center>
-					<!--<div class="portfolio">
-					</div>-->
-		</div>
-	</section>
-	<section id="people" class="wrapper">
-		<div class="container content">
-			<h2 class="title content__title">People</h2>
-			<div>
-				<h5 class="title_small">Faculty</h5>
-			</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script type="text/javascript"
+            src="https://maps.google.com/maps/api/js?key=AIzaSyDRj3S_nk2WIVqQATfqV85DpVBnKI5k5NQ&callback=initMap&libraries=geometry,drawing"async defer>
+    </script>
+   
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="map.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
-			<div >
-				<p>Dr. <a href="https://faculty.utah.edu/u0916912-QUYNH_CAMTHI_NGUYEN/biography/index.hml">Quynh Nguyen</a> (Principal Investigator),
-					Assistant Professor, Department of Health Promotion and Education, University of Utah, USA</p>
-				<p>Dr. <a href="https://faculty.utah.edu/u0030780-KEN_R_SMITH,_PhD/research/index.hml">Ken R. Smith</a>, Professor, Department of Family and Consumer Studies, University of Utah, USA</p>
-				<p>Dr. <a href="http://medicine.utah.edu/faculty/mddetail.php?facultyID=u0599976">James A. VanDerslice</a>, Research Associate Professor, Department of Family and Preventive Medicine, School of Medicine, University of Utah, USA</p>
-				<p>Dr. <a href="https://faculty.utah.edu/u0396099-MING_WEN/research/index.hml">Ming Wen</a>, Professor, Department of Sociology, University of Utah, USA</p>
-				<p>Dr. <a href="https://www.cs.utah.edu/~lifeifei/">Feifei Li</a>, Associate Professor, School of Computing, University of Utah, USA</p>
-			</div>
-			<h5 class="title_small">Research Assistants</h5>
-			<div>
-				<p>Hsien-Wen (Sherry) Meng, Ph.D. Student, Department of Health Promotion and Education, University of Utah, USA</p>
-				<p><a href="https://mapman86.github.io/">Matt McCullough</a>, Ph.D. Student, Department of Geography, University of Utah, USA</p>
-				<p><a href="http://www.cs.utah.edu/~deb/">Debjoyti Paul</a>, Ph.D. student, School of Computing, University of Utah, USA</p>
-			</div>
-			<h5 class="title_small">Alumni</h5>
-			<div>
-				<p>Suraj Kath, Software Engineer, Google</p>
-				<p><a href="http://lidapeng.github.io">Dapeng Li</a>, Postdoctoral Researcher, Michigan State University</p>
-			</div>
-		</div>
-	</section>
-	<!-- <section id="blog" class="wrapper">
-		<div class="container content">
-			<h2 class="title content__title">Blog</h2>
-			<div class="posts">
-				<article class="article article_main">
-					<h2 class="title title_middle article__title">
-						<a href="http://http://blog.stas-melnikov.ru/magic_layout.html" target="_blank" class="article__readmore">Magic layout - JQuery plugin for animate blocks</a>
-					</h2>
-					<a href="http://http://blog.stas-melnikov.ru/magic_layout.html" target="_blank">
-						<img class="responsive-img article__img" src="images/notebook3_1200x800.jpg" alt="project" />
-					</a>
-					<div class="article__date">
-						<div class="article__day">15</div>
-						<div class="article__month">May</div>
-					</div>
-					<div class="article__content">
-						<p>
-							I recently decided to update my website with portfolio. I wanted to create something memorable and spectacular. I had the idea to make an animation of all basic blocks, every block had to come through animation. The result is this. But I decided that this approach is suitable for a variety of websites and decided to make a simple JQuery-plugin. I want to tell about it.
-						</p>
-					</div>
-					<div class="article__footer">
-						<div class="article__author">
-							<span class="article__label"><i class="article__icon icon icon-user"></i>Stas Melnikov</span>
-						</div>
-						<div class="article__tags">
-							<span class="article__label"><i class="article__icon icon icon-tag"></i>Tags:</span>
-							<span class="article__tag">Open-Source</span>
-							<span class="article__tag">Jquery</span>
-							<span class="article__tag">Animation</span>
-						</div>
-					</div>
-				</article>
+    <script type="text/javascript">
+        $(function () {
+            $("#landmarksKey").dialog({
+                autoOpen: true,
+                show: {
+                    effect: "true",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "false",
+                    duration: 1000
+                }
+            });
 
-				</div>
-			</div>
-		</div>
-	</section> -->
+            $("#opener2").click(function () {
+                $("#landmarksKey").dialog("open");
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#accordion").accordion();
+            $("#dialog").dialog({
+                autoOpen: true,
+                show: {
+                    effect: "blank",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "fade",
+                    duration: 1000
+                }
+            }).show();
 
-	<div id="contacts" class="contacts">
-		<section class="contacts__info">
-			<h3 class="title title_little contacts__title">Address:</h3>
-			<p>Department of Health Promotion and Education <br>
-				1901 E. So Campus, Annex B, Rm 2124, Salt Lake City, UT 84112
-			</p>
-		</section>
-		<div id="map" class="contacts__map"></div>
-	</div>
-	<footer class="footer">
-		<div class="container">
-			<div class="footer__middle-column">
-				<!-- <a href="http://stas-melnikov.ru" class="footer__link" target="blank">Developed by Stas Melnikov</a> -->
-				<p>HashtagHealth &copy; University of Utah 2017</p>
-			</div>
-		</div>
-	</footer>
-	<div class="mpc_preloader">
-		<div class="mpc_preloader9"></div>
-	</div>
-	<div class="mobile-menu">
-		<span class="menu-close">+</span>
-		<ul class="mobile-menu-list">
-			<li class="mobile-menu-list__item"><a href="#about" class="mobile-menu__link scroll_js">About</a></li>
-			<li class="mobile-menu-list__item"><a href="#publications" class="mobile-menu__link scroll_js">Publications</a></li>
-			<li class="mobile-menu-list__item"><a href="#people" class="mobile-menu__link scroll_js">People</a></li>
-			<li class="mobile-menu-list__item"><a href="#portfolio" class="mobile-menu__link scroll_js">Portfolio</a></li>
-			<li class="mobile-menu-list__item"><a href="#contacts" class="mobile-menu__link scroll_js">Contacts</a></li>
-			<li class="mobile-menu-list__item"><a href="https://github.com/hashtaghealth" class="mobile-menu__link">GitHub</a></li>
-		</ul>
-	</div>
-<script src="js/jquery.js"></script>
-<script src="js/main.js"></script>
-<script src="js/init.js"></script>
+            $("#dialog2").dialog({
+                autoOpen: false,
+                show: {
+                    effect: "fold",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                }
+            });
+
+            $("#opener").click(function () {
+                $("#dialog2").dialog("open");
+            });
+        });
+
+
+        function closeSelf() {
+            $("#dialog").dialog('close');
+            return false;
+        };
+
+
+
+
+    </script>
+
+    <script type="text/javascript">
+
+        //Layers Loader
+
+        function loadLayers() {
+            for (i = 0; i < layers.length; i++) {
+                var c;
+
+                if (!hasCategoty(layers[i].category)) {
+                    if (layers[i].category != '') {
+                        c = addCategoryUI(layers[i].category, layers[i].name);
+                    }
+                    else {
+                        c = getCategoryContent(layers[i].category);
+                    }
+
+                }
+                else {
+                    c = getCategoryContent(layers[i].category);
+                }
+
+                if (layers[i].category != '') {
+                    var catTable = c.getElementsByTagName('table')[0];
+
+                    var layerItem = document.createElement('tr');
+
+                    var itemtd = document.createElement('td');
+
+                    var itemin = document.createElement('input');
+                    itemin.type = 'checkbox';
+                    itemin.name = 'other';
+                    itemin.id = layers[i].name;
+                    itemin.onclick = showLayer;
+
+                    var itemtd2 = document.createElement('td');
+                    itemtd2.innerHTML = layers[i].name;
+
+                    itemtd.appendChild(itemin);
+                    layerItem.appendChild(itemtd);
+                    layerItem.appendChild(itemtd2);
+
+                    //layerItem.innerHTML = "<td><input onclick='showLayer(\""+layers[i].name+"\")' type='checkbox' name='other' id='"+layers[i].name+"' value='trafficLayer'/></td><td align='left'>"+layers[i].name+"</td>"
+
+                    catTable.appendChild(layerItem);
+                }
+
+            }
+        }
+
+        loadLayers();
+
+        function showLayer() {
+            for (i = 0; i < layers.length; i++) {
+                if (layers[i].name == this.id) {
+                    if (!this.checked) {
+                        layers[i].clearFromMap();
+                    }
+                    else {
+                        layers[i].putOnMap();
+                    }
+                }
+            }
+        }
+
+        function getCategoryContent(cat) {
+            var accordion = document.getElementById('accordion');
+            var e = accordion.getElementsByTagName("h3");
+
+            for (j = 0; j < e.length; j++) {
+                if (e[j].textContent == cat) {
+                    return accordion.getElementsByTagName('div')[j];
+                    break;
+                }
+                else if (j == e.length) {
+                    return false;
+                    break;
+                }
+            }
+        }
+
+
+        function hasCategoty(cat) {
+            var accordion = document.getElementById('accordion');
+            var e = accordion.getElementsByTagName("h3");
+
+            for (j = 0; j < e.length; j++) {
+                if (e[j].textContent == cat) {
+                    return true;
+                    break;
+                }
+                else if (j == e.length) {
+                    return false;
+                    break;
+                }
+            }
+        }
+
+        function addCategoryUI(tag, id) {
+            var accordion = document.getElementById('accordion');
+            var accorHeader = document.createElement('h3');
+            var accorContent = document.createElement('div');
+
+            accorHeader.innerHTML = '<strong>' + tag + '</strong>';
+            var contentTable = document.createElement('table');
+            accorContent.appendChild(contentTable);
+
+            accordion.appendChild(accorHeader);
+            accordion.appendChild(accorContent);
+
+            return accorContent;
+        }
+
+        function startVisible(name) {
+            for (i = 0; i < layers.length; i++) {
+                if (layers[i].name == name) {
+                    layers[i].putOnMap();
+                    var checkbox = document.getElementById(name);
+                    checkbox.checked = true;
+                }
+            }
+        };
+
+    </script>
+
 </body>
 </html>
