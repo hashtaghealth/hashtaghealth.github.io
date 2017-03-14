@@ -1,170 +1,281 @@
-
 <!DOCTYPE html>
 <html>
   <head>
-    <title>HashtagHealth Geoportal</title>
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+    <title>Hashtag Health Geoportal</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+    html { height: 100% }
+    body { height: 100%; margin: 0; padding: 0 }
+    #map-canvas { height: 100% }
     </style>
-           <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyDRj3S_nk2WIVqQATfqV85DpVBnKI5k5NQ&libraries=drawing"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+
+    <!--[if lte IE 8]>
+      <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
+    <![endif]-->
 
   </head>
+
   <body>
-      
-    
-
-    <div id="map"></div>
-    <script>
-        var map
-        var latlng = new google.maps.LatLng(40.00, -100.00)
-        var styledMap
-        var styles
-        
-        //Create an array of styles.
-        styles = [{"featureType":"all","elementType":"geometry.fill","stylers":[{"weight":"2.00"}]},{"featureType":"all","elementType":"geometry.stroke","stylers":[{"color":"#9c9c9c"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"on"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"landscape","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#eeeeee"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#7b7b7b"}]},{"featureType":"road","elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#c8d7d4"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#070707"}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"}]}];
-
-        styledMap = new google.maps.StyledMapType(styles,
-            { name: 'Styled Map' });
-
-        var mapOptions = {
-            zoom: 4,
-            center: latlng,
-            scaleControl: true,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,// 'map_style' ],
-            disableDefaultUI: true,
-                  mapTypeControlOptions : {
-                    position: google.maps.ControlPosition.TOP_LEFT
-                    },
-                    zoomControl: true,
-                    zoomControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_TOP
-                    },
-                    rotateControl: true,
-                    rotateControlOptions: {
-                        position: google.maps.ControlPosition.LEFT_TOP
-                    }
-
-        };
-
-            map = new google.maps.Map(document.getElementById('map'),
-            mapOptions);
-
-
-          //Associate the styled map with the MapTypeId and set it to display.
-          map.mapTypes.set('map_style', styledMap);
-          map.setMapTypeId('map_style');
-        
-        var drawingManager = new google.maps.drawing.DrawingManager({
-          drawingMode: google.maps.drawing.OverlayType.MARKER,
-          drawingControl: true,
-          drawingControlOptions: {
-            position: google.maps.ControlPosition.TOP_RIGHT,
-            drawingModes: ['circle', 'polygon', 'rectangle']
-          },
-          circleOptions: {
-            fillColor: '#ffff00',
-            fillOpacity: .5,
-            strokeWeight: 2,
-            clickable: false,
-            editable: true,
-            zIndex: 1
-          },
-         polygonOptions: {
-            fillColor: '#ffff00',
-            fillOpacity: .5,
-            strokeWeight: 2,
-            clickable: false,
-            editable: true,
-            zIndex: 1
-          }, 
-            rectangleOptions: {
-            fillColor: '#ffff00',
-            fillOpacity: .5,
-            strokeWeight: 2,
-            clickable: false,
-            editable: true,
-            zIndex: 1
-          },
-        });
-        drawingManager.setMap(map);
-        
-        
-    </script>
-
-    <script>
-      
-       // Change this depending on the name of your PHP or XML file
-          downloadUrl('https://storage.googleapis.com/mapsdevsite/json/mapmarkers2.xml', function(data) {
-            var xml = data.responseXML;
-            var markers = xml.documentElement.getElementsByTagName('marker');
-            Array.prototype.forEach.call(markers, function(markerElem) {
-              var name = markerElem.getAttribute('name');
-              var address = markerElem.getAttribute('address');
-              var type = markerElem.getAttribute('type');
-              var point = new google.maps.LatLng(
-                  parseFloat(markerElem.getAttribute('lat')),
-                  parseFloat(markerElem.getAttribute('lng')));
-
-              var infowincontent = document.createElement('div');
-              var strong = document.createElement('strong');
-              strong.textContent = name
-              infowincontent.appendChild(strong);
-              infowincontent.appendChild(document.createElement('br'));
-
-              var text = document.createElement('text');
-              text.textContent = address
-              infowincontent.appendChild(text);
-              var icon = customLabel[type] || {};
-              var marker = new google.maps.Marker({
-                map: map,
-                position: point,
-                label: icon.label
-              });
-              marker.addListener('click', function() {
-                infoWindow.setContent(infowincontent);
-                infoWindow.open(map, marker);
-              });
-            });
-          });
-        }
 
 
 
-      function downloadUrl(url, callback) {
-        var request = window.ActiveXObject ?
-            new ActiveXObject('Microsoft.XMLHTTP') :
-            new XMLHttpRequest;
 
-        request.onreadystatechange = function() {
-          if (request.readyState == 4) {
-            request.onreadystatechange = doNothing;
-            callback(request, request.status);
-          }
-        };
+  <!--<div id="dialog" title="Hashtag Health Map" style="display:none">
+    <p>This online mapping application may be used to look up Twitter characteristics as predictors of health outcomes at the county level from the <a href="https://hashtaghealth.github.io/">Hashtag Health Project.</a> All variables were standardized to have a mean of 0 and standard deviation of 1.</p><br />
+    <p>Use the table on the right to turn different layers on and off.</p><br />
+	<p>*Twitter data collection period: April 2015– March 2016. County summaries were derived from 80 million tweets from the contiguous United States.</p>
 
-        request.open('GET', url, true);
-        request.send(null);
+	<center><form>
+		<div><input type="button" value="Got it!"  onclick="closeSelf();"/></div>
+	</form></center>
+
+</div>-->
+
+
+
+  <div id="map_canvas" ></div>
+  <div id="layers">
+    <div id="accordion">
+      <h3><strong>Map Layers</strong></h3>
+      <div>
+        <table>
+        </table>
+          <br>
+        <p>Funded by NIH Grant #</p>
+		<br />
+		<table>
+		<input id="address" type="textbox" placeholder="County, State">
+        <input type="button" value="Search" onclick="codeAddress()">
+
+
+
+    </div>
+
+  </div>
+
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyDRj3S_nk2WIVqQATfqV85DpVBnKI5k5NQ&sensor=false&libraries=weather,panoramio,drawing,places,adsense"></script>
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css"></script>
+  <script type="text/javascript" src="map.js"></script>
+
+
+  <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    $( "#landmarksKey" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "false",
+        duration: 1000
+      },
+      hide: {
+        effect: "false",
+        duration: 1000
       }
+    });
 
-      function doNothing() {}
-    </script>
-   
-      <!--Goolge Analytics Code-->
-      <script>
-         
+    $( "#opener2" ).click(function() {
+      $( "#landmarksKey" ).dialog( "open" );
+    });
+  });
+  </script>
+  <script type="text/javascript">
+    $(function() {
+      $("#accordion").accordion();
+      $( "#dialog" ).dialog({
+        autoOpen: true,
+        show: {
+          effect: "blank",
+          duration: 1000
+        },
+        hide: {
+          effect: "fade",
+          duration: 1000
+        }
+      }).show();
 
-        </script>
+      $( "#dialog2" ).dialog({
+        autoOpen: false,
+        show: {
+          effect: "fold",
+          duration: 1000
+        },
+        hide: {
+          effect: "explode",
+          duration: 1000
+        }
+      });
+
+    $( "#opener" ).click(function() {
+        $( "#dialog2" ).dialog( "open" );
+        });
+    });
+
+
+	function closeSelf() {
+		$( "#dialog" ).dialog('close');
+		return false;
+		};
+
+
+
+
+  </script>
+
+  <script type="text/javascript">
+
+  //Layers Loader
+
+function loadLayers()
+{
+		for(i = 0; i < layers.length; i++)
+	{
+		var c;
+
+		if(!hasCategoty(layers[i].category))
+		{
+			if(layers[i].category != '')
+			{
+				c = addCategoryUI(layers[i].category, layers[i].name);
+			}
+			else
+			{
+				c = getCategoryContent(layers[i].category);
+			}
+
+		}
+		else
+		{
+			c = getCategoryContent(layers[i].category);
+		}
+
+		if(layers[i].category != '')
+		{
+			var catTable = c.getElementsByTagName('table')[0];
+
+			var layerItem = document.createElement('tr');
+
+			var itemtd = document.createElement('td');
+
+			var itemin = document.createElement('input');
+			itemin.type = 'checkbox';
+			itemin.name ='other';
+			itemin.id = layers[i].name;
+			itemin.onclick = showLayer;
+
+			var itemtd2 = document.createElement('td');
+			itemtd2.innerHTML = layers[i].name;
+
+			itemtd.appendChild(itemin);
+			layerItem.appendChild(itemtd);
+			layerItem.appendChild(itemtd2);
+
+			//layerItem.innerHTML = "<td><input onclick='showLayer(\""+layers[i].name+"\")' type='checkbox' name='other' id='"+layers[i].name+"' value='trafficLayer'/></td><td align='left'>"+layers[i].name+"</td>"
+
+			catTable.appendChild(layerItem);
+		}
+
+	}
+}
+
+loadLayers();
+
+function showLayer()
+{
+	for(i = 0; i < layers.length; i++)
+	{
+		if(layers[i].name == this.id)
+		{
+			if(!this.checked)
+			{
+				layers[i].clearFromMap();
+			}
+			else
+			{
+				layers[i].putOnMap();
+			}
+		}
+	}
+}
+
+function getCategoryContent(cat)
+{
+	var accordion = document.getElementById('accordion');
+	var e = accordion.getElementsByTagName("h3");
+
+	for(j = 0; j < e.length; j++)
+	{
+		if(e[j].textContent == cat)
+		{
+			return accordion.getElementsByTagName('div')[j];
+			break;
+		}
+		else if(j == e.length)
+		{
+			return false;
+			break;
+		}
+	}
+}
+
+
+function hasCategoty(cat)
+{
+	var accordion = document.getElementById('accordion');
+	var e = accordion.getElementsByTagName("h3");
+
+	for(j = 0; j < e.length; j++)
+	{
+		if(e[j].textContent == cat)
+		{
+			return true;
+			break;
+		}
+		else if(j == e.length)
+		{
+			return false;
+			break;
+		}
+	}
+}
+
+function addCategoryUI(tag, id)
+{
+	var accordion = document.getElementById('accordion');
+	var accorHeader = document.createElement('h3');
+	var	accorContent = document.createElement('div');
+
+	accorHeader.innerHTML = '<strong>'+tag+'</strong>';
+	var contentTable = document.createElement('table');
+	accorContent.appendChild(contentTable);
+
+	accordion.appendChild(accorHeader);
+	accordion.appendChild(accorContent);
+
+	return accorContent;
+}
+
+function startVisible(name)
+{
+	for(i = 0; i < layers.length; i++)
+	{
+		if(layers[i].name == name)
+		{
+			layers[i].putOnMap();
+			var checkbox = document.getElementById(name);
+			checkbox.checked = true;
+		}
+	}
+};
+
+</script>
+
   </body>
 </html>
