@@ -196,14 +196,10 @@
 
             function showLayer() {
                 for (i = 0; i < layers.length; i++) {
-                    if (layers[i].name == this.id) {
-                        if (!this.checked) {
-                            layers[i].clearFromMap();
-                        }
-                        else {
-                            layers[i].putOnMap();
-                        }
-                    }
+                    if (layers[i].name == this.id && this.checked)
+                        layers[i].putOnMap();
+                    else
+                        layers[i].clearFromMap();
                 }
             }
 
