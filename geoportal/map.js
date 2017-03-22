@@ -1,7 +1,8 @@
-var adUnit, infowindow, directionsDisplay, geocoder, map;
+var adUnit, infowindow, directionsDisplay, geocoder, map,drawingManager;
 var directionsService = new google.maps.DirectionsService();
 var latlng = new google.maps.LatLng(40.456389, -100.773611);
-
+var polygonArray = [];
+var regions = [];
 var myOptions = {
     zoom: 4,
     center: latlng,
@@ -34,7 +35,34 @@ var myOptions = {
 
 map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-
+var drawnOptions = {
+    drawingMode: google.maps.drawing.OverlayType.POLYGON,
+    drawingControl: true,
+    drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_CENTER,
+        drawingModes: ['circle', 'polygon', 'rectangle']
+    },
+    polygonOptions: {
+        editable: true,
+        clickable: true
+    },
+    circleOptions: {
+        fillColor: '#ffff00',
+        fillOpacity: .5,
+        strokeWeight: 2,
+        clickable: true,// available for click event
+        editable: true,
+        zIndex: 1
+    },
+    rectangleOptions: {
+        fillColor: '#ffff00',
+        fillOpacity: .5,
+        strokeWeight: 2,
+        clickable: true,
+        editable: true,
+        zIndex: 1
+    }
+};
 
 var layers = new Array();
 
@@ -146,11 +174,40 @@ layers.push(	new CartoDBLayer('ZIP code', '', 'Map Layers'));
 
 
 function initialize() {
-  geocoder = new google.maps.Geocoder();
-  directionsDisplay = new google.maps.DirectionsRenderer();
+    DrawnMenuSetUp();
+    contextMenu = new ContextMenuDrawing(map);
 
-  directionsDisplay.setMap(map);
-  directionsDisplay.setPanel(document.getElementById('panel'));
+    drawingManager = new google.maps.drawing.DrawingManager(drawnOptions);
+    drawingManager.setMap(map);
+    drawingManager.setDrawingMode(null);
+    // Add a listener to show coordinate when right click
+    google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event1) {
+        polygonArray.push(event1);
+        drawingManager.setDrawingMode(null);
+        google.maps.event.addListener(event1.overlay, 'rightclick', function (event) {
+            contextMenu.show(event.latLng);
+            document.getElementById('rm').addEventListener('click', function () {
+                event1.overlay.setMap(null);
+            });
+        });
+    });
+
+    MapMenuSetUp();
+    mapMenu = new ContextMenuMap(map);
+    google.maps.event.addListener(map, 'rightclick', function (e) {
+        mapMenu.show(e.latLng);
+        document.getElementById('add').addEventListener('click', function () {
+            addToRegions(e.latLng);
+        });
+        document.getElementById('not add').addEventListener('click', function () {
+            removeFromRegions(e.latLng);
+        });
+    });
+  //geocoder = new google.maps.Geocoder();
+  //directionsDisplay = new google.maps.DirectionsRenderer();
+
+  //directionsDisplay.setMap(map);
+  //directionsDisplay.setPanel(document.getElementById('panel'));
   /*     .on('done', function(layer) {
       var subLayer = layer.getSubLayer(0);
       subLayer.infowindow.set('template', $('#infowindow_template').html());
@@ -162,7 +219,12 @@ function initialize() {
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
-
+function removeAll() {
+    for (var i = 0; i < polygonArray.length; i++) {
+        polygonArray[i].overlay.setMap(null);
+    }
+    polygonArray = [];
+}
 
 
 

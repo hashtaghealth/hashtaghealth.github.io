@@ -12,7 +12,31 @@
 	height: 100%
 }
 
+/*	start styles for the ContextMenu	*/
+.contextmenu {
+    font-size: 12px;
+    visibility: hidden;
+    width: 80px;
+    height: 15px;
+    padding: 2px;
+    position: relative;
+    background-color: gray;
+    border: 2px solid gray;
+    color: white;
+}
 
+.contextmenuMap {
+    font-size: 15px;
+    visibility: hidden;
+    width: 70px;
+    height: 30px;
+    padding: 5px;
+    position: relative;
+    background-color: gray;
+    color: white;
+    border: 1px solid gray;
+}
+/*	end styles for the ContextMenu	*/
 #map_canvas {
 
 	height:100%;
