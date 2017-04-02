@@ -1,4 +1,4 @@
-var adUnit, infowindow, directionsDisplay, geocoder, map,drawingManager;
+var adUnit, infowindow, directionsDisplay, geocoder, map,drawingManager,geocoder;
 var directionsService = new google.maps.DirectionsService();
 var latlng = new google.maps.LatLng(40.456389, -100.773611);
 var polygonArray = [];
@@ -143,6 +143,39 @@ var CartoDBLayer = function (n, u, c)
 	{
 		cartodb.createLayer(map, u).addTo(map, l_in).on('done', function(layer) {
     		l = layer;
+			layer.setInteraction(true);
+          
+            $('#search').on('click', function () {
+                var loc = [];
+                var address = document.getElementById("address").value;
+                
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        loc[0] = results[0].geometry.location.lat();
+                        loc[1] = results[0].geometry.location.lng();
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+
+                var table_name;
+                if (n == 'State')
+                    table_name = 'states';
+                else if (n == 'County')
+                    table_name = 'counties';
+                else
+                    table_name = 'zipcode';
+                layer.trigger('featureClick', null, latlng, null, { cartodb_id: 1 }, 0);
+                var sql = new cartodb.SQL({ user: 'hashtaghealth' });
+                sql.execute("SELECT * FROM public.{{table}} WHERE name10 ILIKE '%{{name}}%' ", { table: table_name, name:address})
+                    .done(function (data) {
+                        var id = data.rows[0].cartodb_id;
+                        layer.trigger('featureClick', null, [loc[0],loc[1]], null, { cartodb_id: id }, 0);
+                    }).error(function (errors) {
+                        alert(errors[0]);
+                    });
+                
+            });
     		});
 	};
 	this.clearFromMap = function()
@@ -174,6 +207,7 @@ layers.push(	new CartoDBLayer('ZIP code', '', 'Map Layers'));
 
 
 function initialize() {
+	geocoder = new google.maps.Geocoder();
     DrawnMenuSetUp();
     contextMenu = new ContextMenuDrawing(map);
 
