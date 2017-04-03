@@ -1,7 +1,11 @@
 var adUnit, infowindow, directionsDisplay, geocoder, map,drawingManager,geocoder;
 var directionsService = new google.maps.DirectionsService();
 var latlng = new google.maps.LatLng(40.456389, -100.773611);
-var polygonArray = [];
+
+var polygonArray = new Array();
+var circle = new Array();
+var rectangle = new Array();
+
 var regions = [];
 var myOptions = {
     zoom: 4,
@@ -139,16 +143,15 @@ var CartoDBLayer = function (n, u, c)
    cb_i++;
    var l_in = cb_i;
 
-  this.putOnMap = function()
-	{
-		cartodb.createLayer(map, u).addTo(map, l_in).on('done', function(layer) {
-    		l = layer;
-			layer.setInteraction(true);
-          
+  this.putOnMap = function () {
+        cartodb.createLayer(map, u).addTo(map, l_in).on('done', function (layer) {
+            l = layer;
+            layer.setInteraction(true);
+
             $('#search').on('click', function () {
                 var loc = [];
                 var address = document.getElementById("address").value;
-                
+
                 geocoder.geocode({ 'address': address }, function (results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         loc[0] = results[0].geometry.location.lat();
@@ -158,26 +161,76 @@ var CartoDBLayer = function (n, u, c)
                     }
                 });
 
-                var table_name;
-                if (n == 'State')
-                    table_name = 'states';
-                else if (n == 'County')
-                    table_name = 'counties';
-                else
-                    table_name = 'zipcode';
-                layer.trigger('featureClick', null, latlng, null, { cartodb_id: 1 }, 0);
                 var sql = new cartodb.SQL({ user: 'hashtaghealth' });
-                sql.execute("SELECT * FROM public.{{table}} WHERE name10 ILIKE '%{{name}}%' ", { table: table_name, name:address})
+                sql.execute("SELECT * FROM public.{{table}} WHERE name10 ILIKE '%{{name}}%' ", { table: table_name, name: address })
                     .done(function (data) {
                         var id = data.rows[0].cartodb_id;
-                        layer.trigger('featureClick', null, [loc[0],loc[1]], null, { cartodb_id: id }, 0);
+                        layer.trigger('featureClick', null, [loc[0], loc[1]], null, { cartodb_id: id }, 0);
                     }).error(function (errors) {
                         alert(errors[0]);
                     });
-                
+
             });
-    		});
-	};
+            $('#aggregate').on('click', function () {
+                var sql = new cartodb.SQL({ user: 'hashtaghealth' });
+                for (var c = 0; c < circle.length; c++) {
+                    sql.execute(withinCircle, { table: table_name, lon: circle[c][1], lat: circle[c][0], radius: circle[c][2] })
+                        .done(function (data) {
+                            var contentString = '<div class="infobox"><h3>AVERAGE DATA IN THAT REGION</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a
+                                + "</p><h4>PERCENT ABOUT ALCOHOL</h4><p>" + data.rows[0].b
+                                + "</p><h4>PERCENT ABOUT EXERCISE</h4><p>" + data.rows[0].c
+                                + "</p><h4>PERCENT ABOUT FAST FOOD</h4><p>" + data.rows[0].d
+                                + "</p><h4> PERCENT ABOUT FOOD</h4><p>" + data.rows[0].e
+                                + "</p><h4>PERCENT THAT ARE HAPPY</h4><p>" + data.rows[0].f
+                                + "</p><h4>PERCENT ABOUT HEALTHY FOOD</h4><p>" + data.rows[0].g
+                                + "</p><h4>PERCENT ABOUT ALCOHOL THAT ARE HAPPY</h4><p>" + data.rows[0].h
+                                + "</p><h4>PERCENT OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>" + data.rows[0].i
+                                + "</p><h4>PERCENT ABOUT FAST FOOD THAT ARE HAPPY</h4><p>" + data.rows[0].j
+                                + "</p><h4>PERCENT OF FOOD TWEETS THAT ARE HAPPY</h4><p>" + data.rows[0].k
+                                + "</p><h4>PERCENT ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>" + data.rows[0].l + "</p></div>";
+
+                            // Replace the info window's content and position.
+                            var infoWindow = new google.maps.InfoWindow();
+                            infoWindow.setContent(contentString);
+                            infoWindow.setPosition(google.maps.ControlPosition.TOP_CENTER);
+                            infoWindow.open(map);
+                        }).error(function (errors) {
+                            alert(errors[0]);
+                        });
+                }
+
+                for (var r = 0; r < rectangle.length; r++) {
+                    alert("EXECUTE");
+                    sql.execute(withinRect, { table: table_name, left: rectangle[r][0], bottom: rectangle[r][1], right: rectangle[r][2], top: rectangle[r][3] })
+                        .done(function (data) {
+                            alert(data.rows[0].b);
+                            var contentString = '<div class="infobox"><h3>AVERAGE DATA IN THAT REGION</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a
+                               + "</p><h4>PERCENT ABOUT ALCOHOL</h4><p>" + data.rows[0].b
+                               + "</p><h4>PERCENT ABOUT EXERCISE</h4><p>" + data.rows[0].c
+                               + "</p><h4>PERCENT ABOUT FAST FOOD</h4><p>" + data.rows[0].d
+                               + "</p><h4> PERCENT ABOUT FOOD</h4><p>" + data.rows[0].e
+                               + "</p><h4>PERCENT THAT ARE HAPPY</h4><p>" + data.rows[0].f
+                               + "</p><h4>PERCENT ABOUT HEALTHY FOOD</h4><p>" + data.rows[0].g
+                               + "</p><h4>PERCENT ABOUT ALCOHOL THAT ARE HAPPY</h4><p>" + data.rows[0].h
+                               + "</p><h4>PERCENT OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>" + data.rows[0].i
+                               + "</p><h4>PERCENT ABOUT FAST FOOD THAT ARE HAPPY</h4><p>" + data.rows[0].j
+                               + "</p><h4>PERCENT OF FOOD TWEETS THAT ARE HAPPY</h4><p>" + data.rows[0].k
+                               + "</p><h4>PERCENT ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>" + data.rows[0].l + "</p></div>";
+
+                            // Replace the info window's content and position.
+                            var infoWindow = new google.maps.InfoWindow();
+                            infoWindow.setContent(contentString);
+
+                            infoWindow.setPosition(google.maps.ControlPosition.TOP_CENTER);
+                            infoWindow.open(map);
+                        }).error(function (errors) {
+                            alert(errors[0]);
+                        });
+                }
+            });
+
+        });
+    };
 	this.clearFromMap = function()
 	{
 		l.getSubLayer(0).hide();
@@ -207,13 +260,38 @@ layers.push(	new CartoDBLayer('ZIP code', '', 'Map Layers'));
 
 
 function initialize() {
-	geocoder = new google.maps.Geocoder();
+    geocoder = new google.maps.Geocoder();
     DrawnMenuSetUp();
     contextMenu = new ContextMenuDrawing(map);
 
     drawingManager = new google.maps.drawing.DrawingManager(drawnOptions);
     drawingManager.setMap(map);
     drawingManager.setDrawingMode(null);
+	
+    google.maps.event.addListener(drawingManager, 'circlecomplete', function (shape) {
+        if (shape == null || (!(shape instanceof google.maps.Circle))) return;
+
+        var c = new Array();
+        c.push(shape.getCenter().lat());
+        c.push(shape.getCenter().lng());
+        c.push(shape.getRadius());
+        circle.push(c);
+    });
+
+    google.maps.event.addListener(drawingManager, 'rectanglecomplete', function (shape) {
+        if (shape == null || (!(shape instanceof google.maps.RECTANGLE))) return;
+        var ne = shape.getBounds().getNorthEast();
+        var sw = shape.getBounds().getSouthWest();
+
+        var r = new Array();
+        r.push(sw.lng());
+        r.push(sw.lat());
+        r.push(ne.lng());
+        r.push(ne.lat());
+
+        rectangle.push(r);
+
+    });
     // Add a listener to show coordinate when right click
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event1) {
         polygonArray.push(event1);
@@ -258,6 +336,8 @@ function removeAll() {
         polygonArray[i].overlay.setMap(null);
     }
     polygonArray = [];
+    circle = [];
+    rectangle = [];
 }
 
 
