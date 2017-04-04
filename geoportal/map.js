@@ -132,18 +132,26 @@ var SpecialLayer = function(n, t, c)
 };
 
 //CartoDB Layer
-var CartoDBLayer = function (n, u, c)
-{
-	this.category = c;
-	this.name = n;
-  var l;
+var CartoDBLayer = function (n, u, c) {
+    this.category = c;
+    this.name = n;
+    var l;
 
+    cb_i++;
+    var l_in = cb_i;
 
+    var table_name;
+    if (n == 'State')
+        table_name = 'states';
+    else if (n == 'County')
+        table_name = 'counties';
+    else
+        table_name = 'zipcode';
 
-   cb_i++;
-   var l_in = cb_i;
+    var withinRect = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE public.{{table}}.the_geom @ ST_MakeEnvelope({{left}}, {{bottom}}, {{right}}, {{top}}, 4326)";
+    var withinCircle = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE ST_Distance_Sphere(the_geom, ST_MakePoint({{lon}}, {{lat}})) <= {{radius}}";
 
-  this.putOnMap = function () {
+    this.putOnMap = function () {
         cartodb.createLayer(map, u).addTo(map, l_in).on('done', function (layer) {
             l = layer;
             layer.setInteraction(true);
@@ -172,33 +180,14 @@ var CartoDBLayer = function (n, u, c)
 
             });
             $('#aggregate').on('click', function () {
-                var sql = new cartodb.SQL({ user: 'hashtaghealth' });
-                for (var c = 0; c < circle.length; c++) {
-                    sql.execute(withinCircle, { table: table_name, lon: circle[c][1], lat: circle[c][0], radius: circle[c][2] })
-                        .done(function (data) {
-                            var contentString = '<div class="infobox"><h3>AVERAGE DATA IN THAT REGION</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a
-                                + "</p><h4>PERCENT ABOUT ALCOHOL</h4><p>" + data.rows[0].b
-                                + "</p><h4>PERCENT ABOUT EXERCISE</h4><p>" + data.rows[0].c
-                                + "</p><h4>PERCENT ABOUT FAST FOOD</h4><p>" + data.rows[0].d
-                                + "</p><h4> PERCENT ABOUT FOOD</h4><p>" + data.rows[0].e
-                                + "</p><h4>PERCENT THAT ARE HAPPY</h4><p>" + data.rows[0].f
-                                + "</p><h4>PERCENT ABOUT HEALTHY FOOD</h4><p>" + data.rows[0].g
-                                + "</p><h4>PERCENT ABOUT ALCOHOL THAT ARE HAPPY</h4><p>" + data.rows[0].h
-                                + "</p><h4>PERCENT OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>" + data.rows[0].i
-                                + "</p><h4>PERCENT ABOUT FAST FOOD THAT ARE HAPPY</h4><p>" + data.rows[0].j
-                                + "</p><h4>PERCENT OF FOOD TWEETS THAT ARE HAPPY</h4><p>" + data.rows[0].k
-                                + "</p><h4>PERCENT ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>" + data.rows[0].l + "</p></div>";
-
-                            // Replace the info window's content and position.
-                            var infoWindow = new google.maps.InfoWindow();
-                            infoWindow.setContent(contentString);
-                            infoWindow.setPosition(google.maps.ControlPosition.TOP_CENTER);
-                            infoWindow.open(map);
-                        }).error(function (errors) {
-                            alert(errors[0]);
-                        });
+                if (circle.length > 0)
+                {
+                    for (var c = 0; c < circle.length; c++) {
+                        openInfoWindow(table_name, circle,c);
+                    }
                 }
 
+                
                 for (var r = 0; r < rectangle.length; r++) {
                     alert("EXECUTE");
                     sql.execute(withinRect, { table: table_name, left: rectangle[r][0], bottom: rectangle[r][1], right: rectangle[r][2], top: rectangle[r][3] })
@@ -231,19 +220,48 @@ var CartoDBLayer = function (n, u, c)
 
         });
     };
-	this.clearFromMap = function()
-	{
-		l.getSubLayer(0).hide();
-		l.remove();
-		l.clear();
+    this.clearFromMap = function () {
+        l.getSubLayer(0).hide();
+        l.remove();
+        l.clear();
 
-	};
-  this.isOnMap = function()
-  {
-    return false;
-  };
+    };
+    this.isOnMap = function () {
+        return false;
+    };
+    function openInfoWindow(table_name, circle,c) {
+        
+        var infoWindow = new google.maps.InfoWindow({
+            position: circle[c].getCenter(),
+            pixelOffset: new google.maps.Size(-30, -30)
+        });
+        var number = c + 1;
+        var contentString = '<div class="infobox"><h3>AVERAGE DATA IN REGION #' + number;
+        var sql = new cartodb.SQL({ user: 'hashtaghealth' });
+        sql.execute(withinCircle, { table: table_name, lon: circle[c].getCenter().lng(), lat: circle[c].getCenter().lat(), radius: circle[c].getRadius() })
+            .done(function (data) {
+
+                contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
+                    + '</p><h4>PERCENT ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
+                    + '</p><h4>PERCENT ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
+                    + '</p><h4>PERCENT ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
+                    + '</p><h4> PERCENT ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+                    + '</p><h4>PERCENT THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
+                    + '</p><h4>PERCENT ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
+                    + '</p><h4>PERCENT ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
+                    + '</p><h4>PERCENT OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
+                    + '</p><h4>PERCENT ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
+                    + '</p><h4>PERCENT OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
+                    + '</p><h4>PERCENT ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
+
+                infoWindow.setContent(contentString);
+                infoWindow.open(map);
+
+            }).error(function (errors) {
+                alert(errors[0]);
+            });
+    }
 };
-
 
 //layers.push(	new LayerContainer('Subdivisions', 'https://www.cartedesign.com/farmington/subdivisions2.kmz', 'City Layers'));
 
@@ -260,22 +278,19 @@ layers.push(	new CartoDBLayer('ZIP code', '', 'Map Layers'));
 
 
 function initialize() {
-    geocoder = new google.maps.Geocoder();
+   geocoder = new google.maps.Geocoder();
+    //-----------------------------DRAWING MANAGER AND ITS CONTENT-----------------------------------------
+    //Creating a context menu to use it in event handler
     DrawnMenuSetUp();
     contextMenu = new ContextMenuDrawing(map);
 
     drawingManager = new google.maps.drawing.DrawingManager(drawnOptions);
     drawingManager.setMap(map);
     drawingManager.setDrawingMode(null);
-	
+    // Add a listener to show coordinate when right click
     google.maps.event.addListener(drawingManager, 'circlecomplete', function (shape) {
         if (shape == null || (!(shape instanceof google.maps.Circle))) return;
-
-        var c = new Array();
-        c.push(shape.getCenter().lat());
-        c.push(shape.getCenter().lng());
-        c.push(shape.getRadius());
-        circle.push(c);
+        circle.push(shape);
     });
 
     google.maps.event.addListener(drawingManager, 'rectanglecomplete', function (shape) {
@@ -292,9 +307,10 @@ function initialize() {
         rectangle.push(r);
 
     });
-    // Add a listener to show coordinate when right click
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event1) {
-        polygonArray.push(event1);
+
+        polygonArray.push(event1.overlay);
+
         drawingManager.setDrawingMode(null);
         google.maps.event.addListener(event1.overlay, 'rightclick', function (event) {
             contextMenu.show(event.latLng);
