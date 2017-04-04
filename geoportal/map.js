@@ -244,7 +244,7 @@ var CartoDBLayer = function (n, u, c) {
         var sw = rectangle[r].getSouthWest();
 
         var infoWindow = new google.maps.InfoWindow({
-            position: sw,
+            position: ne,
         });
         var number = r + 1;
         var contentString = '<div class="infobox"><h3>AVERAGE DATA IN RECTANGLE #' + number;
