@@ -279,10 +279,11 @@ var CartoDBLayer = function (n, u, c) {
 
 //layers.push(	new LayerContainer('Subdivisions', 'https://www.cartedesign.com/farmington/subdivisions2.kmz', 'City Layers'));
 
-layers.push(	new CartoDBLayer('State', 'https://hashtaghealth.carto.com/api/v2/viz/a88b82ca-0900-11e7-b06b-0e3ff518bd15/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('County', 'https://hashtaghealth.carto.com/api/v2/viz/d61716ee-0e4d-11e7-9c2f-0ee66e2c9693/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('Census Tract', '', 'Map Layers'));
-layers.push(	new CartoDBLayer('ZIP code', '', 'Map Layers'));
+layers.push(	new CartoDBLayer('State <a href="https://hashtaghealth.github.io/geoportal/state.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/state.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/a88b82ca-0900-11e7-b06b-0e3ff518bd15/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('County <a href="https://hashtaghealth.github.io/geoportal/county.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/county.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/d61716ee-0e4d-11e7-9c2f-0ee66e2c9693/viz.json', 'Map Layers'));
+layers.push(	new CartoDBLayer('Census Tract <a href="https://hashtaghealth.github.io/geoportal/tract.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/tract.xlsx" target="_blank">.xlsx)</a>', '', 'Map Layers'));
+layers.push(	new CartoDBLayer('ZIP code <a href="https://hashtaghealth.github.io/geoportal/zipcode.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/zipcode.xls" target="_blank">.xls)</a>', '', 'Map Layers'));
+
 
 
 
