@@ -322,7 +322,7 @@ function initialize() {
       subLayer.infowindow.set('template', $('#infowindow_template').html());
 	 }
 	 )*/;
-  startVisible('State');
+  //startVisible('State');
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
