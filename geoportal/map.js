@@ -1,4 +1,4 @@
-var adUnit, infowindow, directionsDisplay, geocoder, map,drawingManager,geocoder;
+var adUnit, directionsDisplay, geocoder, map, drawingManager;
 var directionsService = new google.maps.DirectionsService();
 var latlng = new google.maps.LatLng(40.456389, -100.773611);
 
@@ -6,36 +6,33 @@ var polygonArray = new Array();
 var circle = new Array();
 var rectangle = new Array();
 
-var regions = [];
 var myOptions = {
     zoom: 4,
     center: latlng,
     scaleControl: true,
     overviewMapControl: true,
     maxZoom: 24,
-    minZoom:0,
+    minZoom: 0,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
-	mapTypeControl: true,
-		  mapTypeControlOptions : {
-			position: google.maps.ControlPosition.TOP_LEFT
-			},
-			streetViewControl: true,
-			streetViewControlOptions: {
-			position: google.maps.ControlPosition.LEFT_TOP
-			},
-			zoomControl: true,
-			zoomControlOptions: {
-			position: google.maps.ControlPosition.LEFT_TOP
-			},
-			rotateControl: true,
-			rotateControlOptions: {
-				position: google.maps.ControlPosition.LEFT_TOP
-			}
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+        position: google.maps.ControlPosition.TOP_LEFT
+    },
+    streetViewControl: true,
+    streetViewControlOptions: {
+        position: google.maps.ControlPosition.LEFT_TOP
+    },
+    zoomControl: true,
+    zoomControlOptions: {
+        position: google.maps.ControlPosition.LEFT_TOP
+    },
+    rotateControl: true,
+    rotateControlOptions: {
+        position: google.maps.ControlPosition.LEFT_TOP
+    }
 
 
-  };
-
-
+};
 
 map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
@@ -69,72 +66,13 @@ var drawnOptions = {
 };
 
 var layers = new Array();
-
-//var kmzContainers = new Array();
-
 var cb_i = 0;
 
-var LayerContainer = function(n, u, c)
-{
-	this.name = n;
-	this.kmzURL = u;
-	this.category = c;
-	this.layer = new google.maps.KmlLayer(this.kmzURL, {preserveViewport: true});
-
-	this.putOnMap = function()
-	{
-		this.layer.setMap(map);
-	};
-	this.clearFromMap = function()
-	{
-		this.layer.setMap(null);
-	};
-
-  this.isOnMap = function()
-  {
-    return false;
-  };
-};
-
-//Special Layer includes Traffic, Weather and Pictures and Bicycle
-var SpecialLayer = function(n, t, c)
-{
-	this.name = n;
-
-	this.category = c;
-
-	if(t == 'photo')
-	{
-		this.layer = new google.maps.panoramio.PanoramioLayer();
-	}
-	else if(t == 'traffic')
-	{
-		this.layer = new google.maps.TrafficLayer();
-	}
-	else if(t == 'weather')
-	{
-		this.layer = new google.maps.weather.WeatherLayer({
-			temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT});
-	}
-	else if(t == 'bike')
-	{
-		this.layer = new google.maps.BicyclingLayer();
-	}
-
-	this.putOnMap = function()
-	{
-		this.layer.setMap(map);
-	};
-	this.clearFromMap = function()
-	{
-		this.layer.setMap(null);
-	};
-};
-
 //CartoDB Layer
-var CartoDBLayer = function (n, u, c) {
+var CartoDBLayer = function (n,href, u, c) {
     this.category = c;
     this.name = n;
+    this.link = href;
     var l;
 
     cb_i++;
@@ -148,14 +86,17 @@ var CartoDBLayer = function (n, u, c) {
     else
         table_name = 'zipcode';
 
-    var withinRect = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE public.{{table}}.the_geom && ST_MakeEnvelope({{left}}, {{bottom}}, {{right}}, {{top}}, 4326)";
-    var withinCircle = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE ST_Distance_Sphere(the_geom, ST_MakePoint({{lon}}, {{lat}})) <= {{radius}}";
+    // these are PostGreSql. Functions such as ST_SetSRID, ST_Makepoint,etc. are from POSTGIS
+    var withinRect = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE the_geom && ST_MakeEnvelope({{left}}, {{bottom}}, {{right}}, {{top}}, 4326)";
+    var withinCircle = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE ST_DWITHIN(the_geom, ST_SetSRID(ST_MakePoint({{lon}}, {{lat}}),4326)::geography,{{radius}})";
+    var withinPol = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE the_geom && ST_MakePolygon(LINESTRING(100 250, 100 350, 200 350, 200 250, 100 250))";
 
     this.putOnMap = function () {
         cartodb.createLayer(map, u).addTo(map, l_in).on('done', function (layer) {
             l = layer;
             layer.setInteraction(true);
-
+            //#search means id = search
+            //.search means class = search
             $('#search').on('click', function () {
                 var loc = [];
                 var address = document.getElementById("address").value;
@@ -168,11 +109,15 @@ var CartoDBLayer = function (n, u, c) {
                         alert("Geocode was not successful for the following reason: " + status);
                     }
                 });
-
+                // You can use sql anywhere in map.js, not necessarily inside var CartoDBLayer
+                // Must set user before executing the sql
+                // format: var sql = new cartodb.SQL({ user: 'USERNAME' }); where USERNAME is found at USERNAME.carto.com
                 var sql = new cartodb.SQL({ user: 'hashtaghealth' });
+                // useful format: sql.execute(query,variables to replace in the query).done({//do something}).error({//do something});
                 sql.execute("SELECT * FROM public.{{table}} WHERE name10 ILIKE '%{{name}}%' ", { table: table_name, name: address })
                     .done(function (data) {
                         var id = data.rows[0].cartodb_id;
+                        // fake a click at the above location. Must obtain cartodb_id first
                         layer.trigger('featureClick', null, [loc[0], loc[1]], null, { cartodb_id: id }, 0);
                     }).error(function (errors) {
                         alert(errors[0]);
@@ -180,19 +125,17 @@ var CartoDBLayer = function (n, u, c) {
 
             });
             $('#aggregate').on('click', function () {
-                if (circle.length > 0)
-                {
+                if (circle.length > 0) {
                     for (var c = 0; c < circle.length; c++) {
-                        openInfoWindow(table_name, circle,c);
+                        // helper method was written below
+                        openInfoWindowCircle(table_name, circle, c);
                     }
                 }
-		if (rectangle.length > 0) {
+                if (rectangle.length > 0) {
                     for (var r = 0; r < rectangle.length; r++) {
                         openInfoWindowRectangle(table_name, rectangle, r);
                     }
                 }
-                
-                
             });
 
         });
@@ -206,14 +149,17 @@ var CartoDBLayer = function (n, u, c) {
     this.isOnMap = function () {
         return false;
     };
-    function openInfoWindow(table_name, circle,c) {
-        
+
+    //----------------HELPER METHOD TO OPEN INFOWINDOW FOR EACH SHAPE---------------------
+    //you can call infowindow of carto db, but I couldn't do it so I used infowindow of Google Maps 
+    function openInfoWindowCircle(table_name, circle, c) {
+
         var infoWindow = new google.maps.InfoWindow({
             position: circle[c].getCenter(),
             pixelOffset: new google.maps.Size(-30, -30)
         });
         var number = c + 1;
-        var contentString = '<div class="infobox"><h3>AVERAGE DATA IN REGION #' + number;
+        var contentString = '<div class="infobox"><h3>AVERAGE DATA IN CIRCLE #' + number;
         var sql = new cartodb.SQL({ user: 'hashtaghealth' });
         sql.execute(withinCircle, { table: table_name, lon: circle[c].getCenter().lng(), lat: circle[c].getCenter().lat(), radius: circle[c].getRadius() })
             .done(function (data) {
@@ -222,7 +168,7 @@ var CartoDBLayer = function (n, u, c) {
                     + '</p><h4>PROPORTION ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
                     + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
                     + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-                    + '</p><h4>PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+                    + '</p><h4> PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
                     + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
                     + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
                     + '</p><h4>PROPORTION ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
@@ -238,8 +184,7 @@ var CartoDBLayer = function (n, u, c) {
                 alert(errors[0]);
             });
     }
- 
-     function openInfoWindowRectangle(table_name, rectangle, r) {
+    function openInfoWindowRectangle(table_name, rectangle, r) {
         var ne = rectangle[r].getNorthEast();
         var sw = rectangle[r].getSouthWest();
 
@@ -250,14 +195,14 @@ var CartoDBLayer = function (n, u, c) {
         var contentString = '<div class="infobox"><h3>AVERAGE DATA IN RECTANGLE #' + number;
 
         var sql = new cartodb.SQL({ user: 'hashtaghealth' });
-        
+
         sql.execute(withinRect, { table: table_name, left: sw.lng(), bottom: sw.lat(), right: ne.lng(), top: ne.lat() })
             .done(function (data) {
                 contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
                    + '</p><h4>PROPORTION ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
                    + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
                    + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-                   + '</p><h4>PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+                   + '</p><h4> PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
                    + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
                    + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
                    + '</p><h4>PROPORTION ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
@@ -272,92 +217,106 @@ var CartoDBLayer = function (n, u, c) {
             }).error(function (errors) {
                 alert(errors[0]);
             });
-    }	
-    	
-	
+    }
+
+
 };
 
 //layers.push(	new LayerContainer('Subdivisions', 'https://www.cartedesign.com/farmington/subdivisions2.kmz', 'City Layers'));
-
-layers.push(	new CartoDBLayer('State <a href="https://hashtaghealth.github.io/geoportal/state.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/state.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/a88b82ca-0900-11e7-b06b-0e3ff518bd15/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('County <a href="https://hashtaghealth.github.io/geoportal/county.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/county.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/d61716ee-0e4d-11e7-9c2f-0ee66e2c9693/viz.json', 'Map Layers'));
-layers.push(	new CartoDBLayer('Census Tract <a href="https://hashtaghealth.github.io/geoportal/tract.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/tract.xlsx" target="_blank">.xlsx)</a>', '', 'Map Layers'));
-layers.push(	new CartoDBLayer('ZIP code <a href="https://hashtaghealth.github.io/geoportal/zipcode.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/zipcode.xls" target="_blank">.xls)</a>', '', 'Map Layers'));
-
-
-
-
-
-
-
-
+// TIP ON ADDING HREF:
+// The loadLayers() in map.html creates buttons corresponding to layers. 
+// The text of the button is set in itemtd2.innerHTML = "SOMETHING". 
+// in the CartoDBLayer, I called the text containing href : link
+// so I will set   itemtd2.innerHTML = layers[i].link;
+layers.push(new CartoDBLayer('State','State <a href="https://hashtaghealth.github.io/geoportal/state.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/state.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/a88b82ca-0900-11e7-b06b-0e3ff518bd15/viz.json', 'Map Layers'));
+layers.push(new CartoDBLayer('County','County <a href="https://hashtaghealth.github.io/geoportal/county.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/county.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/d61716ee-0e4d-11e7-9c2f-0ee66e2c9693/viz.json', 'Map Layers'));
+layers.push(new CartoDBLayer('Census Tract','Census Tract <a href="https://hashtaghealth.github.io/geoportal/tract.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/tract.xlsx" target="_blank">.xlsx)</a>', '', 'Map Layers'));
+layers.push(new CartoDBLayer('ZIP code','Zip code <a href="https://hashtaghealth.github.io/geoportal/zipcode.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/zipcode.xls" target="_blank">.xls)</a>', '', 'Map Layers'));
 
 function initialize() {
-   geocoder = new google.maps.Geocoder();
-	
+    // I use geocoder only for "Search" button
+    geocoder = new google.maps.Geocoder();
+
     drawingManager = new google.maps.drawing.DrawingManager(drawnOptions);
     drawingManager.setMap(map);
     drawingManager.setDrawingMode(null);
+
+    // Must set a layer on map. Else, you always need to click on first layer (State) 
+    // before being able to choose on other layers
+    startVisible('County');
     // Add a listener to show coordinate when right click
     google.maps.event.addListener(drawingManager, 'circlecomplete', function (shape) {
         if (shape == null || (!(shape instanceof google.maps.Circle))) return;
+        // circle is an array that is used when you click "Aggregate"
         circle.push(shape);
-    });   
+    });
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event1) {
+        // this array contains all kind of overlay. Use when you need to remove all shapes
         polygonArray.push(event1.overlay);
         drawingManager.setDrawingMode(null);
-        if (event.type === google.maps.drawing.OverlayType.RECTANGLE) {
-            rectangle.push(event.overlay.getBounds());
+        if (event1.type === google.maps.drawing.OverlayType.RECTANGLE) {
+            // rectangle is an array that is used when you click "Aggregate"
+            rectangle.push(event1.overlay.getBounds());
         }
     });
 
-    
-  //geocoder = new google.maps.Geocoder();
-  //directionsDisplay = new google.maps.DirectionsRenderer();
 
-  //directionsDisplay.setMap(map);
-  //directionsDisplay.setPanel(document.getElementById('panel'));
-  /*     .on('done', function(layer) {
-      var subLayer = layer.getSubLayer(0);
-      subLayer.infowindow.set('template', $('#infowindow_template').html());
-	 }
-	 )*/;
-  //startVisible('State');
+    //geocoder = new google.maps.Geocoder();
+    //directionsDisplay = new google.maps.DirectionsRenderer();
+
+    //directionsDisplay.setMap(map);
+    //directionsDisplay.setPanel(document.getElementById('panel'));
+    /*     .on('done', function(layer) {
+        var subLayer = layer.getSubLayer(0);
+        subLayer.infowindow.set('template', $('#infowindow_template').html());
+       }
+       )*/
+    
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
+//-------------------HELPER METHODS FOR DRAWING MANAGER----------------
 function removeAll() {
     for (var i = 0; i < polygonArray.length; i++) {
-        polygonArray[i].overlay.setMap(null);
+        polygonArray[i].setMap(null);
     }
+    // clear all arrays that contain any drawn objects
     polygonArray = [];
     circle = [];
     rectangle = [];
 }
-
-
-
-// Google geocoding code
-
-function codeAddress() {
-  geocoder = new google.maps.Geocoder();
-  var address = document.getElementById("address").value;
-  geocoder.geocode( { 'address': address}, function(results, status) {
-    if (status == google.maps.GeocoderStatus.OK) {
-      map.setCenter(results[0].geometry.location);
-      map.setZoom(6);
-      var marker = new google.maps.Marker({
-        map: map,
-          draggable:true,
-          animation: google.maps.Animation.DROP,
-          position: results[0].geometry.location
-      });
-    } else {
-      alert("Geocode was not successful for the following reason: " + status);
+//-------------------HELPER METHOD TO SET ONE CARTO LAYER ON MAP----------------
+function startVisible(name) {
+    for (i = 0; i < layers.length; i++) {
+        if (layers[i].name == name) {
+            layers[i].putOnMap();
+            var checkbox = document.getElementById(name);
+            checkbox.checked = true;
+        }
     }
-  });
+};
+
+// Google geocoding code. USE WHEN YOU SEARCH FOR AN ADDRESS 
+// THIS CODE HELPS YOU FIND THE COORDINATES AND ADD MARKER 
+function codeAddress() {
+    geocoder = new google.maps.Geocoder();
+    var address = document.getElementById("address").value;
+    geocoder.geocode({ 'address': address }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            map.setCenter(results[0].geometry.location);
+            map.setZoom(6);
+            var marker = new google.maps.Marker({
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                position: results[0].geometry.location
+            });
+        } else {
+            alert("Geocode was not successful for the following reason: " + status);
+        }
+    });
 }
 
 // End of geocoding code

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>Hashtag Health Geoportal</title>
@@ -176,10 +176,11 @@
                         itemin.type = 'radio';
                         itemin.name = 'other';
                         itemin.id = layers[i].name;
+                        
                         itemin.onclick = showLayer;
 
                         var itemtd2 = document.createElement('td');
-                        itemtd2.innerHTML = layers[i].name;
+                        itemtd2.innerHTML = layers[i].link;
 
                         itemtd.appendChild(itemin);
                         layerItem.appendChild(itemtd);
@@ -252,15 +253,7 @@
                 return accorContent;
             }
 
-            function startVisible(name) {
-                for (i = 0; i < layers.length; i++) {
-                    if (layers[i].name == name) {
-                        layers[i].putOnMap();
-                        var checkbox = document.getElementById(name);
-                        checkbox.checked = true;
-                    }
-                }
-            };
+            
 
         </script>
 
