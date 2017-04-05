@@ -219,17 +219,17 @@ var CartoDBLayer = function (n, u, c) {
             .done(function (data) {
 
                 contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
-                    + '</p><h4>PERCENT ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
-                    + '</p><h4>PERCENT ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
-                    + '</p><h4>PERCENT ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-                    + '</p><h4>PERCENT ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+                    + '</p><h4>PROPORTION ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
+                    + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
+                    + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
+                    + '</p><h4>PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
                     + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
-                    + '</p><h4>PERCENT ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
-                    + '</p><h4>PERCENT ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
-                    + '</p><h4>PERCENT OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
-                    + '</p><h4>PERCENT ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
-                    + '</p><h4>PERCENT OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
-                    + '</p><h4>PERCENT ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
+                    + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
+                    + '</p><h4>PROPORTION ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
+                    + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
+                    + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
+                    + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
+                    + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
 
                 infoWindow.setContent(contentString);
                 infoWindow.open(map);
@@ -254,17 +254,17 @@ var CartoDBLayer = function (n, u, c) {
         sql.execute(withinRect, { table: table_name, left: sw.lng(), bottom: sw.lat(), right: ne.lng(), top: ne.lat() })
             .done(function (data) {
                 contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
-                   + '</p><h4>PERCENT ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
-                   + '</p><h4>PERCENT ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
-                   + '</p><h4>PERCENT ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-                   + '</p><h4>PERCENT ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
                    + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
-                   + '</p><h4>PERCENT ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
-                   + '</p><h4>PERCENT ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
-                   + '</p><h4>PERCENT OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
-                   + '</p><h4>PERCENT ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
-                   + '</p><h4>PERCENT OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
-                   + '</p><h4>PERCENT ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
+                   + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
+                   + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
+                   + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
 
                 // Replace the info window's content and position.
                 infoWindow.setContent(contentString);
