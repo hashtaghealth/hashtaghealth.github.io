@@ -140,10 +140,10 @@ var CartoDBLayer = function (table_name,href, u, c) {
 // The text of the button is set in itemtd2.innerHTML = "SOMETHING". 
 // in the CartoDBLayer, I called the text containing href : link
 // so I will set   itemtd2.innerHTML = layers[i].link;
-layers.push(new CartoDBLayer('states','State <a href="https://hashtaghealth.github.io/geoportal/state.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/state.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/a88b82ca-0900-11e7-b06b-0e3ff518bd15/viz.json', 'Map Layers'));
-layers.push(new CartoDBLayer('counties','County <a href="https://hashtaghealth.github.io/geoportal/county.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/county.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/d61716ee-0e4d-11e7-9c2f-0ee66e2c9693/viz.json', 'Map Layers'));
-layers.push(new CartoDBLayer('Census Tract','Census Tract <a href="https://hashtaghealth.github.io/geoportal/tract.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/tract.xlsx" target="_blank">.xlsx)</a>', '', 'Map Layers'));
-layers.push(new CartoDBLayer('ZIP code','Zip code <a href="https://hashtaghealth.github.io/geoportal/zipcode.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/zipcode.xls" target="_blank">.xls)</a>', '', 'Map Layers'));
+layers.push(new CartoDBLayer('states', 'State <a href="https://hashtaghealth.github.io/geoportal/data/state.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/data/state.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/a88b82ca-0900-11e7-b06b-0e3ff518bd15/viz.json', 'Map Layers'));
+layers.push(new CartoDBLayer('counties', 'County <a href="https://hashtaghealth.github.io/geoportal/data/county.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/data/county.xls" target="_blank">.xls)</a>', 'https://hashtaghealth.carto.com/api/v2/viz/d61716ee-0e4d-11e7-9c2f-0ee66e2c9693/viz.json', 'Map Layers'));
+layers.push(new CartoDBLayer('Census Tract', 'Census Tract <a href="https://hashtaghealth.github.io/geoportal/data/tract.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/data/tract.xlsx" target="_blank">.xlsx)</a>', '', 'Map Layers'));
+layers.push(new CartoDBLayer('ZIP code', 'Zip code <a href="https://hashtaghealth.github.io/geoportal/data/zipcode.txt" target="_blank">(.txt /</a><a href="https://hashtaghealth.github.io/geoportal/data/zipcode.xls" target="_blank">.xls)</a>', '', 'Map Layers'));
 
 function initialize() {
     // I use geocoder only for "Search" button
