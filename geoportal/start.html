@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-<title>HashtagHealth</title>
-<meta charset="utf-8" />
-<meta name="description" content="HashtagHealth" />
-<meta name="keywords" content="responsive framework, UI templates, mobile template html5, responsive template, responsive theme, 3d panorama" />
-<meta name="author" content="Matt McCullough, Minh Pham" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
-<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
-<!--THIS IS THE GOOGLE ANALYTICS TRACKING CODE-->
-<script>
+    <title>HashtagHealth-Geoportal</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="HashtagHealth" />
+    <meta name="keywords" content="responsive framework, UI templates, mobile template html5, responsive template, responsive theme, 3d panorama" />
+    <meta name="author" content="Matt McCullough, Minh Pham" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/start.css" type="text/css" media="screen" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+    <!--THIS IS THE GOOGLE ANALYTICS TRACKING CODE-->
+    <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -19,44 +19,114 @@
   ga('create', 'UA-85783082-1', 'auto');
   ga('send', 'pageview');
 
-</script>
+    </script>
 </head>
 <body class="preloader_active">
-	<header class="header header_js" id="home">
-		<div class="container">
-			<h1 class="logo">HashtagHealth <span class="logo__item"> Department of Health Promotion and Education, University of Utah</span></h1>
-		</div>
-	</header>
-	<div class="fullwidth-banner wrapper wrapper_decor">
-		<div class="container content">
-			<!-- <img class="fullwidth-banner__img" src="images/html5.png" alt="html5 icon" /> -->
-			<div class="fullwidth-banner__inner">
-				Geoportal: A Map Displays Geotagged Twitter Data for Indicators of Happiness, Diet, and Physical Activity<br>
-			</div>
-		</div>
-	</div>
-	<section id="about" class="about wrapper">
-		<div class="container content">
-			<h2 class="title content__title">About Geoportal</h2>
-			<div class="about__layout">
-					<p>
-                        This online mapping application may be used to look up geotagged Twitter data as indicators of Happiness, Diet, and Physical Activity
-                        at the state, county, zip code or census tract levels. <a href="https://hashtaghealth.github.io/geoportal/DATA_DICTIONARY.docx" target="_blank">Data dictionary</a> 
-                        includes food, excercise, happiness and alcohol variables. *Twitter data collection period: April 2015– March 2016. 
-                        Data summaries were derived from 80 million tweets from the contiguous United States. 
-                        Please refer to <a href="https://hashtaghealth.github.io/geoportal/Nguyen et al_Building a National Neighborhood Database from Geotagged Twitter Data.pdf" target="_blank">the following manuscript</a>  for more details on the data collection. 
-                        Map was built with Carto and Google Maps<br><br>
+    <header class="header header_js" id="home">
+        <div class="container">
+            <h2 class="logo">HashtagHealth<span class="logo__item">Department of Health Promotion and Education, University of Utah</span></h2>
+            <nav id="menu" class="menu">
+                <span class="menu__icon"></span>
+                <ul class="menu-list">
+                    <li class="menu-list__item"><a href="#about" class="menu__link scroll_js">About</a></li>
+                    <li class="menu-list__item"><a href="#portfolio" class="menu__link scroll_js">Geoportal</a></li>
+                    <li class="menu-list__item"><a href="#people" class="menu__link scroll_js">People</a></li>
+                    <li class="menu-list__item"><a href="https://github.com/hashtaghealth" class="menu__link">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-						The specific functions of the Geoportal map are as follows:<br>
-						<b>Function 1. </b>View data at the clicked location.<br>
-						<b>Function 2. </b>View data at the searched location.<br>
-						<b>Function 3. </b>View aggregated data at a drawn region by choosing "Aggregate" button after drawing the region with the tools on the top of the map.<br>
-                        <b>Function 4. </b>Download raw data of state, county, zip code, or census tract in csv/txt format with links in the window.<br>
-					</p>
-                    <center><iframe src="https://hashtaghealth.github.io/geoportal/map.html" height="700" width="95%"></iframe>
-					</center>
-			</div>
-		</div>
-	</section>
+    <div class="fullwidth-banner wrapper wrapper_decor">
+        <div class="container content">
+            <div class="fullwidth-banner__inner">
+                <h1>HashtagHealth: A Social Media Big Data Resource for Neighborhood Effects Funded by NIH’s Big Data to Knowledge (BD2K) Initiative</h1>
+            </div>
+        </div>
+    </div>
+    <section id="about" class="about wrapper">
+        <div class="container content">
+            <h2 class="title content__title">About the Geoportal</h2>
+            <div class="about__layout">
+                <p>
+                    This online mapping application may be used to look up geotagged Twitter data on indicators of happiness, diet, and physical activity
+                    at the state, county, zip code or census tract levels. *Twitter data collection took place between April 2015 and March 2016. <a href="https://hashtaghealth.github.io/geoportal/data/DATA_DICTIONARY.docx" target="_blank">The data dictionary</a>
+                    includes descriptions of constructed variables. levels. 
+                    Data summaries were derived from 80 million tweets from the contiguous United States.
+                    Please refer to <a href="https://hashtaghealth.github.io/geoportal/data/Nguyen et al_Building a National Neighborhood Database from Geotagged Twitter Data.pdf" target="_blank">the following manuscript</a>  for more details on the data collection.
+                    The mapping application was built with Carto and Google Maps<br><br>
+
+                    The specific functions of the Geoportal map are as follows:<br>
+                    <b>Function 1. </b>View data at the clicked location.<br>
+                    <b>Function 2. </b>View data at the searched location.<br>
+                    <b>Function 3. </b>View aggregated data at a drawn region by choosing the "Aggregate" button after drawing the region with the tools on the top of the map.<br>
+                    <b>Function 4. </b>Download raw data at the state, county, zip code, and census tract levels in csv or txt format with links in the window.<br>
+                    <br>
+                    By Minh Pham and Matt McCullough <br>
+                    Principal Investigator (K01ES025433): Quynh C Nguyen
+                </p>
+            </div>
+        </div>
+    </section>
+    <section id="portfolio" class="wrapper">
+        <div class="container content">
+            <h2 class="title content__title">Geoportal</h2>
+            <p><a href="https://hashtaghealth.github.io/geoportal/map.html" target="_blank">Open new tab for a full view of mapping application</a></p>
+            <center>
+                <iframe src="https://hashtaghealth.github.io/geoportal/map.html" height="600" width="95%"></iframe>
+            </center>
+        </div>
+    </section>
+    <section id="people" class="wrapper">
+        <div class="container content">
+            <h2 class="title content__title">People</h2>
+            <div>
+                <h5 class="title_small">Faculty</h5>
+            </div>
+
+            <div>
+                <p>
+                    Dr. <a href="https://faculty.utah.edu/u0916912-QUYNH_CAMTHI_NGUYEN/biography/index.hml">Quynh Nguyen</a> (Principal Investigator),
+                    Assistant Professor, Department of Health Promotion and Education, University of Utah, USA
+                </p>
+            </div>
+            <h5 class="title_small">Research Assistants</h5>
+            <div>
+                <p><a href="https://mapman86.github.io/">Matt McCullough</a>, Ph.D. Student, Department of Geography, University of Utah, USA</p>
+                <p><a href="https://minh-hpham.github.io/">Minh Pham</a>, B.S. student, School of Computing, University of Utah, USA</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <section class="contacts">
+                <!--<h3 class="title title_little contacts__title">Address:</h3>-->
+                <div class="footer__left-column">
+                    <p>
+                        Department of Health Promotion and Education <br>
+                        1901 E. So Campus, Annex B, Rm 2124, Salt Lake City, UT 84112
+                    </p>
+                </div>
+            </section>
+            <div class="footer__middle-column">
+                <p>HashtagHealth &copy; University of Utah 2017</p>
+            </div>
+        </div>
+    </footer>
+    <div class="mpc_preloader">
+        <div class="mpc_preloader9"></div>
+    </div>
+
+    <div class="mobile-menu">
+        <span class="menu-close">+</span>
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-list__item"><a href="#about" class="mobile-menu__link scroll_js">About</a></li>
+            <li class="mobile-menu-list__item"><a href="#people" class="mobile-menu__link scroll_js">People</a></li>
+            <li class="mobile-menu-list__item"><a href="#portfolio" class="mobile-menu__link scroll_js">Geoportal</a></li>
+            <li class="mobile-menu-list__item"><a href="https://github.com/hashtaghealth" class="mobile-menu__link">GitHub</a></li>
+        </ul>
+    </div>
+
 </body>
 </html>
