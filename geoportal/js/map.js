@@ -139,7 +139,6 @@ var CartoDBLayer = function (table_name,href, u, c) {
 
 };
 
-//layers.push(	new LayerContainer('Subdivisions', 'https://www.cartedesign.com/farmington/subdivisions2.kmz', 'City Layers'));
 // TIP ON ADDING HREF:
 // The loadLayers() in map.html creates buttons corresponding to layers. 
 // The text of the button is set in itemtd2.innerHTML = "SOMETHING". 
