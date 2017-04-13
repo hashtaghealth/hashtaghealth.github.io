@@ -12,6 +12,11 @@ var withinRect = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentex
 var withinCircle = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE ST_DWITHIN(the_geom, ST_SetSRID(ST_MakePoint({{lon}}, {{lat}}),4326)::geography,{{radius}})";
 var withinPol = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(percenthap) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE the_geom && ST_Transform(ST_GeomFromText('POLYGON(({{coordinates}}))',4326),4326)";
 
+
+var withinRectSmall = "SELECT AVG(calories) as a, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(happy) as f,AVG(percenthea) as g,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE the_geom && ST_MakeEnvelope({{left}}, {{bottom}}, {{right}}, {{top}}, 4326)";
+var withinCircleSmall = "SELECT AVG(calories) as a,  AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(happy) as f,AVG(percenthea) as g,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE ST_DWITHIN(the_geom, ST_SetSRID(ST_MakePoint({{lon}}, {{lat}}),4326)::geography,{{radius}})";
+var withinPolSmall = "SELECT AVG(calories) as a, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(happy) as f,AVG(percenthea) as g,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE the_geom && ST_Transform(ST_GeomFromText('POLYGON(({{coordinates}}))',4326),4326)";
+
 var myOptions = {
     zoom: 4,
     center: latlng,
@@ -220,9 +225,6 @@ function getResults() {
 }
 //----------------HELPER METHOD TO OPEN INFOWINDOW FOR EACH SHAPE---------------------
 //you can call infowindow of carto db, but I couldn't do it so I used infowindow of Google Maps 
-var withinRectSmall = "SELECT AVG(calories) as a, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(happy) as f,AVG(percenthea) as g,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE the_geom && ST_MakeEnvelope({{left}}, {{bottom}}, {{right}}, {{top}}, 4326)";
-var withinCircleSmall = "SELECT AVG(calories) as a,  AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(happy) as f,AVG(percenthea) as g,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE ST_DWITHIN(the_geom, ST_SetSRID(ST_MakePoint({{lon}}, {{lat}}),4326)::geography,{{radius}})";
-var withinPolSmall = "SELECT AVG(calories) as a, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(happy) as f,AVG(percenthea) as g,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE the_geom && ST_Transform(ST_GeomFromText('POLYGON(({{coordinates}}))',4326),4326)";
 
 function openInfoWindowCircle(table_name, circle, c) {
 
