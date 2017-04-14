@@ -52,7 +52,7 @@ var drawnOptions = {
     drawingControl: true,
     drawingControlOptions: {
         position: google.maps.ControlPosition.TOP_CENTER,
-        drawingModes: [ 'rectangle','polygon', 'circle'
+        drawingModes: [ 'rectangle','polygon', 'circle']
     },
     polygonOptions: {
         editable: true,
