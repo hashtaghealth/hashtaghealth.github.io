@@ -7,6 +7,8 @@ var circle = new Array();
 var rectangle = new Array();
 var polygon = new Array();
 
+var marker;
+
 // these are PostGreSql. Functions such as ST_SetSRID, ST_Makepoint,etc. are from POSTGIS
 var withinRect = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(happy) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE the_geom && ST_MakeEnvelope({{left}}, {{bottom}}, {{right}}, {{top}}, 4326)";
 var withinCircle = "SELECT AVG(calories) as a, AVG(percentalc) as b, AVG(percentexe) as c,AVG(percentfas) as d,AVG(percentfoo) as e,AVG(happy) as f,AVG(percenthea) as g,AVG(sentalc) as h,AVG(sentex) as i,AVG(sentfastfo) as j,AVG(sentfood) as k,AVG(senthealth) as l FROM public.{{table}} WHERE ST_DWITHIN(the_geom, ST_SetSRID(ST_MakePoint({{lon}}, {{lat}}),4326)::geography,{{radius}})";
@@ -52,7 +54,7 @@ var drawnOptions = {
     drawingControl: true,
     drawingControlOptions: {
         position: google.maps.ControlPosition.TOP_CENTER,
-        drawingModes: [ 'rectangle','polygon', 'circle']
+        drawingModes: ['rectangle', 'polygon', 'circle']
     },
     polygonOptions: {
         editable: true,
@@ -80,7 +82,7 @@ var layers = new Array();
 var cb_i = 0;
 
 //CartoDB Layer
-var CartoDBLayer = function (table_name,href, u, c) {
+var CartoDBLayer = function (table_name, href, u, c) {
     this.category = c;
     this.name = table_name;
     this.link = href;
@@ -92,36 +94,7 @@ var CartoDBLayer = function (table_name,href, u, c) {
     this.putOnMap = function () {
         cartodb.createLayer(map, u).addTo(map, l_in).on('done', function (layer) {
             l = layer;
-            layer.setInteraction(true);
-            //#search means id = search
-            //.search means class = search
-            $('#search').on('click', function () {
-                var loc = [];
-                var address = document.getElementById("address").value;
-
-                geocoder.geocode({ 'address': address }, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        loc[0] = results[0].geometry.location.lat();
-                        loc[1] = results[0].geometry.location.lng();
-                    } else {
-                        alert("Geocode was not successful for the following reason: " + status);
-                    }
-                });
-                // You can use sql anywhere in map.js, not necessarily inside var CartoDBLayer
-                // Must set user before executing the sql
-                // format: var sql = new cartodb.SQL({ user: 'USERNAME' }); where USERNAME is found at USERNAME.carto.com
-                var sql = new cartodb.SQL({ user: 'hashtaghealth' });
-                // useful format: sql.execute(query,variables to replace in the query).done({//do something}).error({//do something});
-                sql.execute("SELECT * FROM public.{{table}} WHERE name10 ILIKE '%{{name}}%' ", { table: table_name, name: address })
-                    .done(function (data) {
-                        var id = data.rows[0].cartodb_id;
-                        // fake a click at the above location. Must obtain cartodb_id first
-                        layer.trigger('featureClick', null, [loc[0], loc[1]], null, { cartodb_id: id }, 0);
-                    }).error(function (errors) {
-                        alert(errors[0]);
-                    });
-
-            });
+            layer.setInteraction(true);         
         });
     };
     this.clearFromMap = function () {
@@ -134,7 +107,7 @@ var CartoDBLayer = function (table_name,href, u, c) {
         return false;
     };
 
- 
+
 
 
 };
@@ -156,10 +129,9 @@ function initialize() {
     drawingManager = new google.maps.drawing.DrawingManager(drawnOptions);
     drawingManager.setMap(map);
     drawingManager.setDrawingMode(null);
-
+    startVisible('states');
     // Must set a layer on map. Else, you always need to click on first layer (State) 
     // before being able to choose on other layers
-    startVisible('counties');
     // Add a listener to show coordinate when right click
     google.maps.event.addListener(drawingManager, 'circlecomplete', function (shape) {
         if (shape == null || (!(shape instanceof google.maps.Circle))) return;
@@ -192,7 +164,7 @@ function initialize() {
         subLayer.infowindow.set('template', $('#infowindow_template').html());
        }
        )*/
-    
+
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -234,8 +206,7 @@ function openInfoWindowCircle(table_name, circle, c) {
     var number = c + 1;
     var contentString = '<div class="infobox"><h3>AVERAGE DATA IN CIRCLE #' + number;
     var sql = new cartodb.SQL({ user: 'hashtaghealth' });
-    if(table_name == 'states'||table_name=='counties')
-    {
+    if (table_name == 'states' || table_name == 'counties') {
         sql.execute(withinCircle, { table: table_name, lon: circle[c].getCenter().lng(), lat: circle[c].getCenter().lat(), radius: circle[c].getRadius() })
             .done(function (data) {
 
@@ -260,30 +231,29 @@ function openInfoWindowCircle(table_name, circle, c) {
             });
     }
 
-    else
-    {
-         sql.execute(withinCircleSmall, { table: table_name, lon: circle[c].getCenter().lng(), lat: circle[c].getCenter().lat(), radius: circle[c].getRadius() })
-            .done(function (data) {
+    else {
+        sql.execute(withinCircleSmall, { table: table_name, lon: circle[c].getCenter().lng(), lat: circle[c].getCenter().lat(), radius: circle[c].getRadius() })
+           .done(function (data) {
 
-                contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
+               contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
 
-                    + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
-                    + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-                    + '</p><h4> PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
-                    + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
-                    + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
+                   + '</p><h4> PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+                   + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
 
-                    + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
-                    + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
-                    + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
-                    + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
+                   + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
+                   + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
 
-                infoWindow.setContent(contentString);
-                infoWindow.open(map);
+               infoWindow.setContent(contentString);
+               infoWindow.open(map);
 
-            }).error(function (errors) {
-                alert(errors[0]);
-            });
+           }).error(function (errors) {
+               alert(errors[0]);
+           });
     }
 }
 function openInfoWindowRectangle(table_name, rectangle, r) {
@@ -297,50 +267,49 @@ function openInfoWindowRectangle(table_name, rectangle, r) {
     var contentString = '<div class="infobox"><h3>AVERAGE DATA IN RECTANGLE #' + number;
 
     var sql = new cartodb.SQL({ user: 'hashtaghealth' });
-    if(table_name == 'states'||table_name=='counties')
-    {
-    sql.execute(withinRect, { table: table_name, left: sw.lng(), bottom: sw.lat(), right: ne.lng(), top: ne.lat() })
-        .done(function (data) {
-            contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-               + '</p><h4> PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
-               + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
-               + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
-               + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
+    if (table_name == 'states' || table_name == 'counties') {
+        sql.execute(withinRect, { table: table_name, left: sw.lng(), bottom: sw.lat(), right: ne.lng(), top: ne.lat() })
+            .done(function (data) {
+                contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
+                   + '</p><h4> PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+                   + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
+                   + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
+                   + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
 
-            // Replace the info window's content and position.
-            infoWindow.setContent(contentString);
-            infoWindow.open(map);
-        }).error(function (errors) {
-            alert(errors[0]);
-        });
+                // Replace the info window's content and position.
+                infoWindow.setContent(contentString);
+                infoWindow.open(map);
+            }).error(function (errors) {
+                alert(errors[0]);
+            });
     }
-    else{
-         sql.execute(withinRectSmall, { table: table_name, left: sw.lng(), bottom: sw.lat(), right: ne.lng(), top: ne.lat() })
-        .done(function (data) {
-            contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-               + '</p><h4> PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
-               + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
-               + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
-               + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
+    else {
+        sql.execute(withinRectSmall, { table: table_name, left: sw.lng(), bottom: sw.lat(), right: ne.lng(), top: ne.lat() })
+       .done(function (data) {
+           contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
+              + '</p><h4> PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+              + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
+              + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
+              + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
 
-            // Replace the info window's content and position.
-            infoWindow.setContent(contentString);
-            infoWindow.open(map);
-        }).error(function (errors) {
-            alert(errors[0]);
-        });
+           // Replace the info window's content and position.
+           infoWindow.setContent(contentString);
+           infoWindow.open(map);
+       }).error(function (errors) {
+           alert(errors[0]);
+       });
     }
 }
 function openInfoWindowPolygon(table_name, polygon, r) {
@@ -361,52 +330,51 @@ function openInfoWindowPolygon(table_name, polygon, r) {
     var number = r + 1;
     var contentString = '<div class="infobox"><h3>AVERAGE DATA IN POLYGON #' + number;
     var sql = new cartodb.SQL({ user: 'hashtaghealth' });
-    if(table_name == 'states'||table_name=='counties')
-    {
-    sql.execute(withinPol, { table: table_name, coordinates: content })
-        .done(function (data) {
-            contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
-               + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
-               + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
-               + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
+    if (table_name == 'states' || table_name == 'counties') {
+        sql.execute(withinPol, { table: table_name, coordinates: content })
+            .done(function (data) {
+                contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT ALCOHOL</h4><p>' + data.rows[0].b.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+                   + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT ALCOHOL THAT ARE HAPPY</h4><p>' + data.rows[0].h.toFixed(4)
+                   + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
+                   + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
+                   + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
 
-            // Replace the info window's content and position.
-            infoWindow.setContent(contentString);
-            infoWindow.open(map);
-        }).error(function (errors) {
-            alert(errors[0]);
-        });
+                // Replace the info window's content and position.
+                infoWindow.setContent(contentString);
+                infoWindow.open(map);
+            }).error(function (errors) {
+                alert(errors[0]);
+            });
     }
-    else{
-         sql.execute(withinPolSmall, { table: table_name, coordinates: content })
-        .done(function (data) {
-            contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
+    else {
+        sql.execute(withinPolSmall, { table: table_name, coordinates: content })
+       .done(function (data) {
+           contentString += '</h3><br><h4>AVERAGE CALORIC DENSITY OF FOOD </h4><p>' + data.rows[0].a.toFixed(4)
 
-               + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
-               + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT EXERCISE</h4><p>' + data.rows[0].c.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT FAST FOOD</h4><p>' + data.rows[0].d.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT FOOD</h4><p>' + data.rows[0].e.toFixed(4)
+              + '</p><h4>PROPORTION THAT ARE HAPPY</h4><p>' + data.rows[0].f.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT HEALTHY FOOD</h4><p>' + data.rows[0].g.toFixed(4)
 
-               + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
-               + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
-               + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
+              + '</p><h4>PROPORTION OF EXERCISE TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].i.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT FAST FOOD THAT ARE HAPPY</h4><p>' + data.rows[0].j.toFixed(4)
+              + '</p><h4>PROPORTION OF FOOD TWEETS THAT ARE HAPPY</h4><p>' + data.rows[0].k.toFixed(4)
+              + '</p><h4>PROPORTION ABOUT HEALTHY FOODS THAT ARE HAPPY</h4><p>' + data.rows[0].l.toFixed(4) + '</p></div>';
 
-            // Replace the info window's content and position.
-            infoWindow.setContent(contentString);
-            infoWindow.open(map);
-        }).error(function (errors) {
-            alert(errors[0]);
-        });
+           // Replace the info window's content and position.
+           infoWindow.setContent(contentString);
+           infoWindow.open(map);
+       }).error(function (errors) {
+           alert(errors[0]);
+       });
     }
 }
 //-------------------HELPER METHODS FOR DRAWING MANAGER----------------
@@ -421,6 +389,7 @@ function removeAll() {
     polygon = [];
 }
 //-------------------HELPER METHOD TO SET ONE CARTO LAYER ON MAP----------------
+
 function startVisible(name) {
     for (i = 0; i < layers.length; i++) {
         if (layers[i].name == name) {
@@ -434,13 +403,14 @@ function startVisible(name) {
 // Google geocoding code. USE WHEN YOU SEARCH FOR AN ADDRESS 
 // THIS CODE HELPS YOU FIND THE COORDINATES AND ADD MARKER 
 function codeAddress() {
-    geocoder = new google.maps.Geocoder();
     var address = document.getElementById("address").value;
+    if(marker != null)
+        marker.setMap(null);
     geocoder.geocode({ 'address': address }, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
-            map.setZoom(6);
-            var marker = new google.maps.Marker({
+            map.setZoom(5);
+            marker = new google.maps.Marker({
                 map: map,
                 draggable: true,
                 animation: google.maps.Animation.DROP,
