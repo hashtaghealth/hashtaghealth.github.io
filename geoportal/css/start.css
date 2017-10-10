@@ -41,6 +41,13 @@ Template created with use of a Responsive Framework http://stas-melnikov.ru/resp
 .icon-user:before {
     background-image: url("../icons/user.svg");
 }
+figure {
+    display: inline-block;
+}
+
+figcaption {
+    text-align: center;
+}
 /*
  *style template
  */
