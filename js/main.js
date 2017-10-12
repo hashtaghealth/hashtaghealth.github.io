@@ -13,7 +13,8 @@ var ResponsiveUX = {
 
 		var mapCanvas = document.getElementById("map"),
 		mapOptions ={
-			center: new google.maps.LatLng(40.762665, -111.836791),
+			// center: new google.maps.LatLng(40.762665, -111.836791),
+            center: new google.maps.LatLng(38.993587, -76.943285),
 			zoom: 17,
 			mapTypeId: google.maps.MapTypeId.roadmap,
 			scrollwheel: false,
@@ -22,8 +23,10 @@ var ResponsiveUX = {
 
 		map = new google.maps.Map(mapCanvas, mapOptions),
 		marker = new google.maps.Marker({
-			position: new google.maps.LatLng(40.762665, -111.836791),
-			map: map,
+			// position: new google.maps.LatLng(40.762665, -111.836791),
+            position: new google.maps.LatLng(38.993587, -76.943285),
+
+        map: map,
 			icon: 'icons/marker.svg',
 		});
 	},
