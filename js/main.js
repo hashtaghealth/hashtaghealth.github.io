@@ -36,7 +36,7 @@ var ResponsiveUX = {
 		var script = document.createElement("script"),
 		body = $("body");
 
-		script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDEN_8Sph4q9GwhWKKnsOP5bl4Frwyo3aM&amp;sensor=false&callback=ResponsiveUX.initMap";
+		script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBck9VFrEjWMgfZ4u56y6claPSQ_T7K034&amp;sensor=false&callback=ResponsiveUX.initMap";
 		script.async = true;
 		body.append(script);
 		body.removeClass("preloader_active");
